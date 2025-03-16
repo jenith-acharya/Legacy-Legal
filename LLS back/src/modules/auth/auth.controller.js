@@ -13,13 +13,13 @@ class AuthController{
             const {email,password} =  req.body;
                 console.log(email,password);
             // access user 
-            const members = await teamService.getSingleMemberByFilter({email})
-                console.log(members);
-            if (bcrypt.compareSync(password,members.password)==true) {
-                if(members.status==statusType.ACTIVE || 'active'){
-                    const token = jwt.sign({sub:members._id}
+            const user = await teamService.getSingleUserByFilter({email})
+                console.log(user);
+            if (bcrypt.compareSync(password,user.password)==true) {
+                if(user.status==statusType.ACTIVE || 'active'){
+                    const token = jwt.sign({sub:user._id}
                     ,process.env.JWT_SECRET,
-                   // {expiresIn:'1 day',algorithm:}
+                    // {expiresIn:'1 day',algorithm:}
                       );
 
                       //refresh token
@@ -27,10 +27,10 @@ class AuthController{
                       res.json({
                         result:{
                             userDetail:{
-                                _id:members._id,
-                               name:members.name,
-                               email:members.email,
-                               role:members.role,  
+                                _id:user._id,
+                               name:user.name,
+                               email:user.email,
+                               role:user.role,  
                             },
                             token
                             },
@@ -56,15 +56,15 @@ class AuthController{
         
         let data = req.body;
         // data transformation
-          data = teamService.transformMemberCreate(req);
+          data = teamService.transformUserCreate(req);
 
          console.log(data);
          //Database store
-           const user = await teamService.createMember(data)
+           const user = await teamService.createUser(data)
         
         //  sending mail service
         
-        await teamService.sendActivationEmail(data);
+        await mailService.sendActivationEmail(data);
         
         
         // sending response
@@ -94,13 +94,13 @@ class AuthController{
         }
     }
 
-    activateUser = async (req,res,next)=>{
+    activateUsers = async (req,res,next)=>{
         try {
             const {token} = req.params;
             if (token.length !== 20){
                throw {statusCode: 422, message: 'Invalid activationToken'}
             }
-             const user =  await  teamService.getSingleMemberByFilter({activationToken:token});
+             const user =  await  teamService.getSingleUserByFilter({activationToken:token});
              console.log(user);
             
             const today = Date.now();
@@ -133,12 +133,12 @@ class AuthController{
 resendActivationToken = async (req,res,next)=>{
     try {
         const {token} = req.params;
-        const user = await teamService.getSingleMemberByFilter({token});
+        const user = await teamService.getSingleUserByFilter({token});
 
-         user = teamService.generateMemberActivationToken(user);
+         user = teamService.generateUserActivationToken(user);
 
          await user.save();  //insert or update
-        await teamService.sendActivationEmail({
+        await mailService.sendActivationEmail({
             email: user.email,
             activationToken: user.activationToken,
             name: user.name,
@@ -171,7 +171,7 @@ refreshToken = async (req,res,next)=>{
             throw {statusCode: 401, message: 'Refresh token required'}
         }
 
-        await teamService.getSingleMemberByFilter({_id:sub});
+        await teamService.getSingleUserByFilter({_id:sub});
 
         const accessToken = jwt.sign({sub},process.env.JWT_SECRET,{expiresIn:'1 day'});
         

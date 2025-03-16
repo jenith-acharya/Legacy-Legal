@@ -7,27 +7,45 @@ const statusType = {
 };
 
 const TeamMemberCreateDTO = joi.object({
-    fullname: joi.string().min(3).max(50).required(),
-    role: joi.string().min(3).max(50).required(),
-    description: joi.string().empty(null, '').optional().default(null),
+fullName: joi.string().min(3).max(100).required(),
     email: joi.string().email().required(),
-    phone: joi.string().pattern(/^[0-9]{10,15}$/).required(), // Allows phone numbers between 10 to 15 digits
-    image: joi.string().uri().empty(null, '').optional().default(null),
-    facebook: joi.string(),
-    twitter: joi.string(),
-    linkedin: joi.string()
+    password: joi.string().min(6).max(100).required(),
+    confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
+        'any.only': 'Passwords must match'
+    }),
+    number: joi.string().pattern(/^\d{10}$/).required().messages({
+        'string.pattern.base': 'Invalid phone number'
+    }),
+    facebook: joi.string().uri().allow(null),
+    twitter: joi.string().uri().allow(null),
+    linkedin: joi.string().uri().allow(null),
+    role: joi.object({
+        label: joi.string().valid('admin', 'member').required(),
+        value: joi.string().valid('admin', 'member').required(),
+    }).required(),
+    image: joi.any().optional().default(null),
+    description: joi.string().min(10).max(5000).required(),
 });
 
 const TeamMemberUpdateDTO = joi.object({
-    fullname: joi.string().min(3).max(50).optional(),
-    role: joi.string().min(3).max(50).optional(),
-    description: joi.string().empty(null, '').optional().default(null),
-    email: joi.string().email().optional(),
-    phone: joi.string().pattern(/^[0-9]{10,15}$/).optional(),
-    image: joi.string().uri().empty(null, '').optional().default(null),
-    facebook:joi.string(),
-    twitter: joi.string(),
-    linkedin: joi.string()
+    fullName: joi.string().min(3).max(100).required(),
+        email: joi.string().email().required(),
+        password: joi.string().min(6).max(100).required(),
+        confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
+            'any.only': 'Passwords must match'
+        }),
+        number: joi.string().pattern(/^\d{10}$/).required().messages({
+            'string.pattern.base': 'Invalid phone number'
+        }),
+        facebook: joi.string().uri().allow(null),
+        twitter: joi.string().uri().allow(null),
+        linkedin: joi.string().uri().allow(null),
+        role: joi.object({
+            label: joi.string().valid('admin', 'member').required(),
+            value: joi.string().valid('admin', 'member').required(),
+        }).required(),
+        image: joi.any().optional().default(null),
+        description: joi.string().min(10).max(5000).required(),
 });
 
 module.exports = {

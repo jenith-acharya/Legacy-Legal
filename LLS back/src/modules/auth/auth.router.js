@@ -18,12 +18,11 @@ authRouter.post('/signin',bodyValidator(LoginDTO),authcontroller.loginUser);
 
 authRouter.get('/me',loginCheck,authcontroller.getLoggedInUser);
 
+authRouter.get('/activate/:token',authcontroller.activateUsers);
 
+authRouter.get('/resend-activation-token/:token ',hasPermission(['admin','members']),authcontroller.resendActivationToken)
 
-
-
-
-
+authRouter.get('/refresh-token',authcontroller.refreshToken)
 
 
 
