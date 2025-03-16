@@ -11,6 +11,7 @@ const TeamSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
+        unique: true,
         required: true
     },
     email: {
@@ -20,7 +21,24 @@ const TeamSchema = new mongoose.Schema({
     },
     slug: {
         type: String,
+        required: true,
+        unique: true
+    },
+    role:{
+        type:String,
         required: true
+    },
+    facebook:{
+        type:String,
+        unique:true
+    },
+    twitter:{
+        type: String,
+        unique:true
+    },
+    linkedin:{
+        type: String,
+        unique:true
     },
     activationtoken: {
         type: String

@@ -5,8 +5,8 @@ const practiceService = require("./practice.service");
 class PracticeController {
   async listForHome(req, res, next) { 
       try {
-          // Fetch practice areas logic
-          res.json({ result: [], message: "List of practice areas for home" });
+        const list = await practiceService.listPractices();
+        res.json({ result: list , message: "List of practice areas for home" });
       } catch (error) {
           next(error);
       }

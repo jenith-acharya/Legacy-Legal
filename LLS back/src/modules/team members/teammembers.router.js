@@ -9,7 +9,7 @@ const teamMemberController = require('./teammember.controller');
 const router = express.Router();
 
 // Public routes
-router.get('/list-team', teamMemberController.getTeamMembers); // ✅ Renamed for consistency
+router.get('/list-home', teamMemberController.getTeamMembers); // ✅ Renamed for consistency
 
 // Protected routes for Admin
 router.route('/')

@@ -7,26 +7,26 @@ const statusType = {
 };
 
 const TeamMemberCreateDTO = joi.object({
-    name: joi.string().min(3).max(50).required(),
+    fullname: joi.string().min(3).max(50).required(),
     role: joi.string().min(3).max(50).required(),
     description: joi.string().empty(null, '').optional().default(null),
     email: joi.string().email().required(),
     phone: joi.string().pattern(/^[0-9]{10,15}$/).required(), // Allows phone numbers between 10 to 15 digits
-    photo: joi.string().uri().empty(null, '').optional().default(null),
-    status: joi.string().valid(...Object.values(statusType)).required(),
+    image: joi.string().uri().empty(null, '').optional().default(null),
     facebook: joi.string(),
-    linkedin:joi.string()
+    twitter: joi.string(),
+    linkedin: joi.string()
 });
 
 const TeamMemberUpdateDTO = joi.object({
-    name: joi.string().min(3).max(50).optional(),
+    fullname: joi.string().min(3).max(50).optional(),
     role: joi.string().min(3).max(50).optional(),
     description: joi.string().empty(null, '').optional().default(null),
     email: joi.string().email().optional(),
     phone: joi.string().pattern(/^[0-9]{10,15}$/).optional(),
-    photo: joi.string().uri().empty(null, '').optional().default(null),
-    status: joi.string().valid(...Object.values(statusType)).optional(),
+    image: joi.string().uri().empty(null, '').optional().default(null),
     facebook:joi.string(),
+    twitter: joi.string(),
     linkedin: joi.string()
 });
 

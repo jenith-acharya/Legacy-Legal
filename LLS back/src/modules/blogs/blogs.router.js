@@ -8,7 +8,7 @@ const blogController = require('./blogs.controller');
 const router = require('express').Router();
 
 // Public routes
-router.route('/')
+router.route('/list-home')
     .get(blogController.listBlogs);
 
 router.route('/:id')

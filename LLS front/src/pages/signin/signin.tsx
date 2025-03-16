@@ -1,82 +1,103 @@
-import  { useState } from 'react';
-import { Lock, Mail } from 'lucide-react';
-
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Lock, Mail } from "lucide-react";
+import {  useNavigate } from "react-router-dom";
+import authSvc from "../auth/auth.service";
+import { toast } from "react-toastify";
+import { useContext, useEffect, useState } from "react";
+import AuthContext from "../../context/auth.context";
 
 const Signin = () => {
-    const [email, setemail] = useState<string>("");
-    const [password, setpassword] = useState<string>("");
-    
+  const LoginDTO = Yup.object({
+    email: Yup.string().email().required(),
+    password: Yup.string().required(),
+  });
+
+  const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(LoginDTO)
+  });
+
+  const navigate = useNavigate();
+  const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (loggedInUser) {
+      toast.info("You are already logged in");
+      navigate('/' + loggedInUser.role);
+    }
+  }, [loggedInUser, navigate]);
+
+  const login = async (data: any) => {
+    try {
+      setLoading(true);
+      const response: any = await authSvc.postRequest("/auth/signin", data);
+      console.log("Login Response:", response); // Debug log
+      localStorage.setItem("_at", response.result.token.token);
+      localStorage.setItem("_rt", response.result.token.refreshToken);
+      toast.success(`Welcome to ${response.result.userDetail.role}`);
+      setLoggedInUser(response.result.userDetail);
+      navigate("/" + response.result.userDetail.role);
+    } catch (exception: any) {
+      toast.error(exception.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-800 via-red-600 to-orange-400 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 space-y-8">
-        {/* Header */}
         <div className="text-center">
           <h2 className="text-3xl font-bold text-red-800 mb-2">Only for Members</h2>
-          <p className="text-gray-600">Sign to Manage all of the site</p>
+          <p className="text-gray-600">Sign in to manage the site</p>
         </div>
 
-        
-        <form className="space-y-6">
-          {/* Email Input */}
+        <form onSubmit={handleSubmit(login)} className="space-y-6">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Email Address
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Email Address</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type="email" value={email} onChange={(e: any)=> setemail(e.target.value)}
+                {...register("email")}
+                type="email"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-red-800 transition"
                 placeholder="you@example.com"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
             </div>
           </div>
 
-          {/* Password Input */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type="password" value={password} onChange={(e:any)=> setpassword(e.target.value)}
+                {...register("password")}
+                type="password"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-red-800 transition"
                 placeholder="••••••••"
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              )}
             </div>
           </div>
 
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="h-4 w-4 text-red-800 focus:ring-red-800 border-gray-300 rounded"
-              />
-              <label className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-            <button type="button" className="text-sm font-medium text-red-800 hover:text-red-700">
-              Forgot password?
-            </button>
-          </div>
-
-          {/* Sign In Button */}
-          <button 
+          <button disabled={loading}
             type="submit"
             className="w-full bg-red-800 text-white rounded-lg py-3 px-4 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2 transform transition hover:scale-105"
           >
             Sign In
           </button>
         </form>
-
-        
       </div>
     </div>
   );

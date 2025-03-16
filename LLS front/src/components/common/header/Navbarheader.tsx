@@ -1,8 +1,28 @@
 import { Button, Navbar } from "flowbite-react";
 import { NavLink } from "react-router-dom";
 import Logo from "../../../assets/logo.svg";
-
+import { useState, useEffect } from "react";
+import authSvc from "../../../pages/auth/auth.service";
 export const Homeheader = () => {
+  
+  const [loggedInUser, setloggedInUser]= useState({} as any)
+  const getLoggedInUser = async() =>{
+    try{
+      const response: any =  await authSvc.getRequest("/auth/me", {auth:true})
+      setloggedInUser(response.result)
+    }catch(exception){
+      console.log(exception)
+    }
+  }
+  useEffect(() => {
+    const token= localStorage.getItem('_at') || null;
+    if(token){
+      getLoggedInUser()
+    }
+  
+  }, [])
+  
+  
   return (
     <>
       <Navbar fluid className="bg-black h-32">
@@ -10,6 +30,15 @@ export const Homeheader = () => {
           <img src={Logo} className="size-40 sm:h-28 sm:w-64" alt="LLS Logo" />
         </Navbar.Brand>
         <div className="flex md:order-2">
+          {
+            loggedInUser? <>
+            <NavLink
+            to={"/"+loggedInUser.role}
+            className={({ isActive }) =>
+              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+            }
+          > {loggedInUser.name} </NavLink>
+            </> : <>
           <Button
             href="/signin"
             color="failure"
@@ -18,8 +47,10 @@ export const Homeheader = () => {
           >
             Sign In
           </Button>
+          </>
+          }
           <Navbar.Toggle />
-        </div>
+          </div>
 
         <Navbar.Collapse className="decoration-white">
           <NavLink

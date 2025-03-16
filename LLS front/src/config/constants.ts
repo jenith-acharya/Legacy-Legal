@@ -13,7 +13,7 @@ export const MessageConstants = {
   export type SearchParams = {
     page?: number;
     limit?: number;
-    search?: string;
+    search?: string | null;
     sort?: string;
     order?: string;
   }

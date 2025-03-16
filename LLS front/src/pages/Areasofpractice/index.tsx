@@ -6,7 +6,7 @@ import debt from "../../../../../debt recovery and insolvency matters.jpg";
 import developmentproject from "../../../../../development project disputes.jpg";
 import domesticandinternation from "../../../../../domestic and international arbiturites.webp";
 import Heading1 from "../../components/common/title";
-import Breadcrumb from "../../components/breadcrumb navigation/breadcrumb component";
+import Breadcrumb from "../../components/common/breadcrumb navigation/breadcrumb component";
 
 const Areasofpractice = () => {
   return (
