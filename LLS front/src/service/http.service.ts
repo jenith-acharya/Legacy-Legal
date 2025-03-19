@@ -18,33 +18,21 @@ class HttpService {
 
   // Set headers based on the configuration passed
   #setHeaders = (config: HeaderConfigProps) => {
-    // Default headers
-    this.headers = {
-      'Content-Type': 'application/json',
-    };
+    this.headers = { 'Content-Type': 'application/json' };
 
-    // If auth is true, add Authorization header with token
     if (config && config?.auth) {
       const accessToken = localStorage.getItem("_at");
       if (accessToken) {
-        this.headers = {
-          ...this.headers,
-          Authorization: `Bearer ${accessToken}`,
-        };
+        this.headers = { ...this.headers, Authorization: `Bearer ${accessToken}` };
       } else {
         throw new Error("Authorization token missing");
       }
     }
 
-    // If file is true, set header for multipart/form-data
     if (config && config?.file) {
-      this.headers = {
-        ...this.headers,
-        'Content-Type': 'multipart/form-data',
-      };
+      this.headers = { ...this.headers, 'Content-Type': 'multipart/form-data' };
     }
 
-    // Set params if provided in the config
     if (config?.params) {
       this.params = { ...config.params };
     }
@@ -56,9 +44,9 @@ class HttpService {
       this.#setHeaders(config);
       const response = await axiosInstance.post(url, data, {
         headers: { ...this.headers },
-        params:{ ...this.params}
+        params: { ...this.params }
       });
-      return response.data; // Assuming you want to return the response data
+      return response.data;
     } catch (error: any) {
       this.#handleError(error);
     }
@@ -72,7 +60,7 @@ class HttpService {
         headers: { ...this.headers },
         params: { ...this.params },
       });
-      return response.data; // Assuming you want to return the response data
+      return response.data;
     } catch (error: any) {
       this.#handleError(error);
     }
@@ -118,10 +106,35 @@ class HttpService {
     }
   };
 
-  // Centralized error handler to provide better error messages
+  // Forgot Password Request
+  forgotPasswordRequest = async ({ email, fullName }: { email: string; fullName: string }) => {
+    try {
+        this.#setHeaders({});
+        const response = await axiosInstance.post("/auth/forgot-password", { email, fullName }, {
+            headers: { ...this.headers },
+        });
+        return response.data;
+    } catch (error: any) {
+        this.#handleError(error);
+    }
+};
+
+  // Reset Password Request
+  resetPasswordRequest = async (data: { forgetToken?: string; newPassword: string; confirmPassword: string }) => {
+    try {
+      this.#setHeaders({});
+      const response = await axiosInstance.post("/auth/reset-password", data, {
+        headers: { ...this.headers },
+      });
+      return response.data;
+    } catch (error: any) {
+      this.#handleError(error);
+    }
+  };
+
+  // Centralized error handler
   #handleError = (error: any) => {
     if (error.response) {
-      // Server responded with a status code other than 2xx
       const errorResponse: ErrorResponse = {
         message: error.response.data.message || "An error occurred",
         status: error.response.status,
@@ -129,11 +142,9 @@ class HttpService {
       console.error("Error Response:", errorResponse);
       throw errorResponse;
     } else if (error.request) {
-      // No response was received
       console.error("No response received:", error.request);
       throw new Error("Network error: No response received from the server");
     } else {
-      // Something went wrong in setting up the request
       console.error("Error Setting Up Request:", error.message);
       throw new Error(`Error: ${error.message}`);
     }

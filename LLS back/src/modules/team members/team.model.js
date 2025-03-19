@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const TeamSchema = new mongoose.Schema({
-    name: {
+    fullName: {   
         type: String,
         required: true
     },
@@ -9,52 +9,58 @@ const TeamSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    phone: {
-        type: Number,
+    phone: {   
+        type: String,
         unique: true,
         required: true
+    },
+    status: {
+        type: String,
+        required: true,
     },
     email: {
         type: String,
         unique: true,
         required: true
     },
-    slug: {
+    password: {
         type: String,
         required: true,
-        unique: true
     },
-    role:{
-        type:String,
+    role: {
+        type: String,
         required: true
     },
-    facebook:{
-        type:String,
-        unique:true
-    },
-    twitter:{
+    facebook: {
         type: String,
-        unique:true
+        unique: true
     },
-    linkedin:{
+    twitter: {
         type: String,
-        unique:true
+        unique: true
     },
-    activationtoken: {
+    linkedin: {
+        type: String,
+        unique: true
+    },
+    activationToken: {
         type: String
     },
-    activatedfor: {
+    activatedFor: {
         type: Date
     },
-    forgettoken: {
-        type: String
+    // Added Forgot Password Fields
+    forgetToken: { 
+        type: String,
+        default: null
     },
-    forgetfor: {
-        type: Date
+    forgetFor: { 
+        type: Date,
+        default: null
     },
-    createdby: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Team' // Assuming team members can create other team members
+        ref: 'Team' 
     }
 }, {
     timestamps: true,

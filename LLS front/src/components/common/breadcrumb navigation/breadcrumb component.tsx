@@ -1,5 +1,5 @@
 import React from "react";
-import law from "../../../../../../Law.jpg";
+import law from "../../../assets/public/Law.jpg";
 
 const Breadcrumbnavigation = ({ children }: { children: React.ReactNode }) => {
   return (

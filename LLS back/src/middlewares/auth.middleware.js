@@ -20,7 +20,7 @@ const loginCheck = async (req, res, next) => {
         const data = jwt.verify(token, process.env.JWT_SECRET);  
 
         // TODO: Fetch user from database
-        let user = await userService.getSingleUserById({ _id: data.sub });
+        let user = await userService.getSingleMemberById({ _id: data.sub });
 
         //  Check if user exists
         if (!user) {

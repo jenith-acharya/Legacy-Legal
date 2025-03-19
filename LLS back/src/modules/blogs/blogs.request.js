@@ -6,8 +6,8 @@ const BlogCreateDTO = joi.object({
     date: joi.date().required(), 
     title: joi.string().min(3).max(150).required(),
     status: joi.string().valid(...Object.values(statusType)).required(),
-    link: joi.string().required(),
-    photo: joi.string().optional().default(null), 
+   
+    image: joi.string().optional().default(null), 
     description: joi.string().min(10).max(5000).required(),
     
 });
@@ -17,8 +17,8 @@ const BlogUpdateDTO = joi.object({
     date: joi.date().optional(), 
     title: joi.string().min(3).max(150).optional(),
     status: joi.string().valid(...Object.values(statusType)).required(), 
-    link: joi.string().required(), 
-    photo: joi.string().optional().default(null), 
+     
+    image: joi.string().optional().default(null), 
     description: joi.string().min(10).max(5000).optional(),
     
 });

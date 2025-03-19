@@ -1,12 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "../layout/layout";
 import Landingpage from "../pages/landing";
-import Ourteam from "../pages/Our Team";
-import Areasofpractice from "../pages/Areasofpractice";
-import Signin from "../pages/signin/signin";
+import {Signin, ForgotPassword} from "../pages/signin/signin";
 import Contact from "../pages/contactpage";
 import Aboutuspage from "../pages/About Us";
-import {BlogsCreatePage, Blogslistingpage} from "../pages/blogs/index";
+import { BlogsCreatePage, Blogslistingpage, BlogsEditPage } from "../pages/blogs/index";
 import { useEffect, useState } from "react";
 import AuthContext from "../context/auth.context";
 import authSvc from "../pages/auth/auth.service";
@@ -15,18 +13,21 @@ import { AdminDashboard } from "../pages/dashboard";
 import CheckPermission from "./rbac.config";
 import LoadingComponent from "../components/common/loading/loading.component";
 import Errorpage from "../components/common/error/notfounderror";
-import {BlogsComponent} from "../../src/components/blogs/index";
-import TeamCreatePage from "../pages/Our Team/team-create";
-import TeamListPage from "../pages/Our Team/team-list.page";
+import { BlogsComponentforPage } from "../../src/components/blogs/index";
+import { TeamCreatePage, TeamEditPage, TeamListingPage } from "../pages/Our Team/exporting";
+import Areasofpracticecomponent from "../components/practice/aop";
+import BlogPage from "../pages/blogs/blogspage";
+import TeamSection from "../pages/Our Team";
+import ResetPassword from "../pages/signin/reset-password.page";
 
 export const Routerconfig = () => {
-  const [loggedInUser, setLoggedInUser] = useState<any>(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const getLoggedInUser = async () => {
     try {
-      const response: any = await authSvc.getRequest('/auth/me', { auth: true });
-      console.log("User data fetched:", response.result); // Debug log
+      const response = await authSvc.getRequest('/auth/me', { auth: true });
+      console.log("User data fetched:", response.result);
       setLoggedInUser(response.result);
     } catch (exception) {
       console.log("Error fetching user:", exception);
@@ -38,7 +39,7 @@ export const Routerconfig = () => {
   useEffect(() => {
     const token = localStorage.getItem("_at");
     if (token) {
-      getLoggedInUser(); // Get logged-in user data if token exists
+      getLoggedInUser();
     } else {
       setLoading(false);
     }
@@ -52,27 +53,29 @@ export const Routerconfig = () => {
         <AuthContext.Provider value={{ loggedInUser, setLoggedInUser }}>
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Landingpage />} />
+              <Route index element={<Landingpage />} />
               <Route path="/aboutus" element={<Aboutuspage />} />
-              <Route path="/ourteam" element={<Ourteam />} />
-              <Route path="/areaofpractice" element={<Areasofpractice />} />
-              <Route path="/blogs" element={<BlogsComponent />} />
+              <Route path="/ourteam" element={<TeamSection />} />
+              <Route path="/areaofpractice" element={<Areasofpracticecomponent />} />
+              <Route path="/blogs" element={<BlogPage />} />
+              <Route path="/blogs/:id" element={<BlogsComponentforPage/>} />
               <Route path="/contact" element={<Contact />} />
               <Route path="*" element={<Errorpage url="/" label="Go To Home" />} />
             </Route>
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/signin" element={<Signin />} />
-            </Routes>
 
-
-            <Routes>
-            <Route path="/admin" element={<CheckPermission allowedBy="admin" children={<AdminLayout />} />} >
+            <Route path="/admin" element={<CheckPermission allowedBy="admin" children={<AdminLayout />} />}>
               <Route index element={<AdminDashboard />} />
               <Route path="*" element={<Errorpage url="/admin" label="Go To Dashboard" />} />
-              <Route path="blogs" element={<Blogslistingpage/>}/>
-              <Route path="blogs/create" element={<BlogsCreatePage/>}/>
+              <Route path="blogs" element={<Blogslistingpage />} />
+              <Route path="blogs/create" element={<BlogsCreatePage />} />
+              <Route path="blogs/:id/edit" element={<BlogsEditPage />} />
 
-              <Route path="/admin/team" element={<TeamListPage />} />
-              <Route path="/admin/team/create" element={<TeamCreatePage />} />
+              <Route path="team" element={<TeamListingPage />} />
+              <Route path="team/create" element={<TeamCreatePage />} />
+              <Route path="team/:id/edit" element={<TeamEditPage />} />
             </Route>
           </Routes>
         </AuthContext.Provider>

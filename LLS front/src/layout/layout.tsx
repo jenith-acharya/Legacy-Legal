@@ -7,7 +7,7 @@ const Layout = () => {
     <>
       <Homeheader />
       <main>
-        <Outlet /> {/* This renders the page content dynamically */}
+        <Outlet /> 
       </main>
       <Footercomponent />
     </>

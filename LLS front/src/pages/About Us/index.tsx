@@ -1,5 +1,5 @@
 import Breadcrumbnavigation from "../../components/common/breadcrumb navigation/breadcrumb component";
-import logo from "../../../public/logo.bmp"
+import logo from "../../assets/public/logo.bmp"
 const AboutUs = () => {
   return (
     <>

@@ -14,6 +14,10 @@ const PracticeSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    status:{
+        type: String,
+        required:true
+    },
     description:{
         type: String,
         required: true
@@ -21,9 +25,9 @@ const PracticeSchema = new mongoose.Schema({
     createdby: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Team', // Assuming 'Team' is the collection for team members
-        required: true
+        
     },
-    createddate: {
+    date: {
         type: Date,
         required: true
     }

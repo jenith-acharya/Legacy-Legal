@@ -2,11 +2,11 @@ const joi = require('joi');
 
 const LoginDTO = joi.object({
     email: joi.string().email().required(),
-    password : joi.string().required()
+    password: joi.string().required()
 });
 
 const registerUserDTO = joi.object({
-    fullName: joi.string().min(3).max(100).required(),
+    fullName: joi.string().min(3).max(100).required(),  // Fixed Fullname issue
     email: joi.string().email().required(),
     password: joi.string().min(6).max(100).required(),
     confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
@@ -26,8 +26,22 @@ const registerUserDTO = joi.object({
     description: joi.string().min(10).max(5000).required(),
 });
 
-module.exports= {
-    LoginDTO,
-    registerUserDTO
+const forgotPasswordDTO = joi.object({
+    email: joi.string().email().required(),
+    fullName: joi.string().required()
+});
 
-}
+const ResetPasswordDTO = joi.object({
+    forgetToken: joi.string().required(),
+    newPassword: joi.string().min(6).max(100).required(),
+    confirmPassword: joi.string().valid(joi.ref('newPassword')).required().messages({
+        'any.only': 'Passwords must match'
+    })
+});
+
+module.exports = {
+    LoginDTO,
+    registerUserDTO,
+    forgotPasswordDTO,
+    ResetPasswordDTO
+};

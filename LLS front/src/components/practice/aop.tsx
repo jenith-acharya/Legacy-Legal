@@ -1,10 +1,10 @@
 import { Button } from "flowbite-react";
-import commercialmediation from "../../../../../commercial mediation.jpg";
-import banking from "../../../../../banking and finance disputes.jpg";
-import coandcommlitigation from "../../../../../corporate and commercial litigation.jpeg";
-import debt from "../../../../../debt recovery and insolvency matters.jpg";
-import developmentproject from "../../../../../development project disputes.jpg";
-import domesticandinternation from "../../../../../domestic and international arbiturites.webp";
+import commercialmediation from "../../assets/public/commercial mediation.jpg";
+import banking from "../../assets/public/banking and finance disputes.jpg";
+import coandcommlitigation from "../../assets/public/corporate and commercial litigation.jpeg";
+import debt from "../../assets/public/debt recovery and insolvency matters.jpg";
+import developmentproject from "../../assets/public/development project disputes.jpg";
+import domesticandinternation from "../../assets/public/domestic and international arbiturites.webp";
 import Heading1 from "../common/title";
 
 const Areasofpracticecomponent = () => {

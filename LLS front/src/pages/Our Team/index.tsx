@@ -3,9 +3,9 @@ import {
   faEnvelope,
   
 } from "@fortawesome/free-solid-svg-icons";
-import kumar from "../../../public/dr kumar.jpg";
-import radha from "../../../public/radha.jpg";
-import prerana from "../../../public/prerana.jpg";
+import kumar from "../../assets/public/dr kumar.jpg";
+import radha from "../../assets/public/radha.jpg";
+import prerana from "../../assets/public/prerana.jpg";
 import {
   faFacebook,
   faTwitter,

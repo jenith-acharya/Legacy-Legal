@@ -1,13 +1,9 @@
 const joi = require('joi');
 
-// Define the allowed status types for validation
-const statusType = {
-    ACTIVE: 'ACTIVE',
-    INACTIVE: 'INACTIVE'
-};
+
 
 const TeamMemberCreateDTO = joi.object({
-fullName: joi.string().min(3).max(100).required(),
+Fullname: joi.string().min(3).max(100).required(),
     email: joi.string().email().required(),
     password: joi.string().min(6).max(100).required(),
     confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
@@ -28,7 +24,7 @@ fullName: joi.string().min(3).max(100).required(),
 });
 
 const TeamMemberUpdateDTO = joi.object({
-    fullName: joi.string().min(3).max(100).required(),
+    Fullname: joi.string().min(3).max(100).required(),
         email: joi.string().email().required(),
         password: joi.string().min(6).max(100).required(),
         confirmPassword: joi.string().valid(joi.ref('password')).required().messages({

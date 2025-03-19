@@ -1,11 +1,11 @@
 const teamService = require("../team members/teammember.services");
 const TeamModel = require("./team.model");
 
-class TeamMemberController {
+class MemberController {
     // Get all team members
-    getTeamMembers = async (req, res, next) => {
+    getMembers = async (req, res, next) => {
         try {
-            const teamMembers = await teamService.listAllMembers();
+            const teamMembers = await teamService.getAllMembers();
 
             res.status(200).json({
                 result: teamMembers,
@@ -18,7 +18,7 @@ class TeamMemberController {
     };
 
     // Create a new team member
-    createTeamMember = async (req, res, next) => {
+    createMember = async (req, res, next) => {
         try {
             const data = await teamService.transformMemberCreate(req);
             data.createdby = req.authUser?.id; // Assigning creator info
@@ -39,7 +39,7 @@ class TeamMemberController {
     };
 
     // Get team member details by ID
-    getTeamMemberById = async (req, res, next) => {
+    getMemberById = async (req, res, next) => {
         try {
             const { id } = req.params;
             const member = await teamService.getSingleMemberById(id);
@@ -55,7 +55,7 @@ class TeamMemberController {
     };
 
     // Update team member details
-    updateTeamMember = async (req, res, next) => {
+    updateMember = async (req, res, next) => {
         try {
             const { id } = req.params;
             const data = req.body;
@@ -72,7 +72,7 @@ class TeamMemberController {
     };
 
     // Delete team member by ID
-    deleteTeamMember = async (req, res, next) => {
+    deleteMember = async (req, res, next) => {
         try {
             const { id } = req.params;
             await teamService.deleteById(id);
@@ -89,7 +89,7 @@ class TeamMemberController {
 }
 
 // Create an instance of the controller
-const teamMemberController = new TeamMemberController();
+const memberController = new MemberController();
 
 // Export the controller
-module.exports = teamMemberController;
+module.exports = memberController;

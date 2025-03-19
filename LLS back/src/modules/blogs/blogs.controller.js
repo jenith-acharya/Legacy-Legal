@@ -34,7 +34,7 @@ class BlogController {
   // List all blog posts
   listBlogs = async (req, res, next) => {
     try {
-      const { page = 1, limit = 10, search } = req.query;
+      const { page = 1, limit = 5, search } = req.query;
       let filter = {};
       
       if (search) {

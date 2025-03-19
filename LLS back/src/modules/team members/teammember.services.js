@@ -15,38 +15,25 @@ class TeamService {
   // Transform team member creation data
   transformMemberCreate = async (req) => {
     try {
-      let data = req.body; 
+        let data = req.body;
 
-      // Hash password
-      const salt = bcrypt.genSaltSync(10);
-      data.password = bcrypt.hashSync(data.password, salt);
-      delete data.confirmPassword;
+        if (!data.password) {
+            throw { statusCode: 422, message: 'Password is required' };
+        }
 
-      // Handle single file upload
-      if (req.file) {
-        const imageUrl = await uploadImage(
-          `./public/uploads/${req.uploadPath}/${data[req.file.fieldname]}`
-        );
-        deleteFile(`public/uploads/${req.uploadPath}/${data[req.file.fieldname]}`);
-        data.image = imageUrl;
-      }
+        const salt = bcrypt.genSaltSync(10);
+        data.password = bcrypt.hashSync(data.password, salt);
+        delete data.confirmPassword;
 
-      // Handle multiple file uploads
-      if (req.files) {
-        data.images = req.files.map(
-          (file) => `${req.uploadPath}/${file.filename}`
-        );
-      }
+        data = this.generateMemberActivationToken(data);
+        data.status = "inactive";
 
-      data = this.generateMemberActivationToken(data);
-      data.status = "inactive";
-
-      return data;
+        return data;
     } catch (error) {
-      console.error("Error at transform member creation service", error);
-      throw error;
+        console.error("Error at transform member creation service", error);
+        throw error;
     }
-  };
+};
 
   // Send activation email to team member
   sendActivationEmail = async ({
@@ -92,16 +79,16 @@ class TeamService {
   // Get a single team member by filter
   getSingleMemberByFilter = async (filter) => {
     try {
-      const memberDetail = await TeamModel.findOne(filter);
-      if (memberDetail) {
+        const memberDetail = await TeamModel.findOne(filter);
+        if (!memberDetail) {
+            throw { statusCode: 422, message: "Member not found" };
+        }
         return memberDetail;
-      } else {
-        throw { statusCode: 422, message: "Unable to process request" };
-      }
     } catch (error) {
-      throw error;
+        throw error;
     }
-  };
+};
+
 
   // Get a single team member by ID
   getSingleMemberById = async (id) => {

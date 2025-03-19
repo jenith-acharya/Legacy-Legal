@@ -10,7 +10,8 @@ const router = express.Router();
 
 // Public routes
 router.get('/list-home', practiceController.listForHome);  // ✅ Ensure function exists
-router.get('/count', practiceController.countPractices);   // ✅ Ensure function exists
+router.get('/count', practiceController.countPractices);  
+router.get('/:id',practiceController.viewPractice ) // ✅ Ensure function exists
 
 // Protected routes for Admin
 router.route('/')
@@ -24,7 +25,7 @@ router.route('/')
         practiceController.createPractice
     );
 
-router.route('/:practice')
+router.route('/:id')
     .get(practiceController.viewPractice)
     .patch(
         loginCheck,

@@ -4,59 +4,59 @@ import Logo from "../../../assets/logo.svg";
 import { useState, useEffect } from "react";
 import authSvc from "../../../pages/auth/auth.service";
 export const Homeheader = () => {
-  
-  const [loggedInUser, setloggedInUser]= useState({} as any)
-  const getLoggedInUser = async() =>{
-    try{
-      const response: any =  await authSvc.getRequest("/auth/me", {auth:true})
+
+  const [loggedInUser, setloggedInUser] = useState({} as any)
+  const getLoggedInUser = async () => {
+    try {
+      const response: any = await authSvc.getRequest("/auth/me", { auth: true })
       setloggedInUser(response.result)
-    }catch(exception){
+    } catch (exception) {
       console.log(exception)
     }
   }
+
   useEffect(() => {
-    const token= localStorage.getItem('_at') || null;
-    if(token){
+    const token = localStorage.getItem('_at') || null;
+    if (token) {
       getLoggedInUser()
     }
-  
+
   }, [])
-  
-  
+
   return (
     <>
-      <Navbar fluid className="bg-black h-32">
+      <Navbar fluid className="bg-black h-20 sm:h-32">
         <Navbar.Brand href="https://legacylegal.com.np">
-          <img src={Logo} className="size-40 sm:h-28 sm:w-64" alt="LLS Logo" />
+          <img src={Logo} className="h-16 w-32 sm:h-28 sm:w-64" alt="LLS Logo" />
         </Navbar.Brand>
         <div className="flex md:order-2">
           {
-            loggedInUser? <>
-            <NavLink
-            to={"/"+loggedInUser.role}
-            className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
-            }
-          > {loggedInUser.name} </NavLink>
+            loggedInUser ? <>
+              <NavLink
+                to={"/" + loggedInUser.role}
+                className={({ isActive }) =>
+                  `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+                }
+              > {loggedInUser.name} </NavLink>
             </> : <>
-          <Button
-            href="/signin"
-            color="failure"
-            style={{ width: 150, height: 45, backgroundColor: "dark red" }}
-            pill
-          >
-            Sign In
-          </Button>
-          </>
+              <Button
+                href="/signin"
+                color="failure"
+                style={{ width: 150, height: 45, backgroundColor: "dark red" }}
+                pill
+              >
+                Sign In
+              </Button>
+            </>
           }
-          <Navbar.Toggle />
-          </div>
+          <Navbar.Toggle className="text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50" />
+        </div>
 
-        <Navbar.Collapse className="decoration-white">
+        <Navbar.Collapse className="decoration-white bg-black text-center">
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+              `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`
             }
           >
             HOME
@@ -64,7 +64,7 @@ export const Homeheader = () => {
           <NavLink
             to="/aboutus"
             className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+              `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`
             }
           >
             ABOUT US
@@ -72,7 +72,7 @@ export const Homeheader = () => {
           <NavLink
             to="/ourteam"
             className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+              `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`
             }
           >
             OUR TEAM
@@ -80,7 +80,7 @@ export const Homeheader = () => {
           <NavLink
             to="/areaofpractice"
             className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+              `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`
             }
           >
             AREAS OF PRACTICE
@@ -88,7 +88,7 @@ export const Homeheader = () => {
           <NavLink
             to="/blogs"
             className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+              `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`
             }
           >
             BLOGS
@@ -96,7 +96,7 @@ export const Homeheader = () => {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              `text-[15px] ${isActive ? "text-red-800" : "text-white"}`
+              `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`
             }
           >
             CONTACT

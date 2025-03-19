@@ -16,7 +16,7 @@ const Footercomponent=()=>{
               <Footer.LinkGroup col>
                 <Footer.Link className="text-white" href="/">Home</Footer.Link>
                 <Footer.Link className="text-white" href="/ourteam">Our Team</Footer.Link>
-                <Footer.Link className="text-white" href="/areas-of-practice">Areas of Practice</Footer.Link>
+                <Footer.Link className="text-white" href="/areaofpractice">Areas of Practice</Footer.Link>
                 <Footer.Link className="text-white" href="/blogs">Blogs</Footer.Link>
                 <Footer.Link className="text-white" href="/contact">Contact</Footer.Link>
               </Footer.LinkGroup>

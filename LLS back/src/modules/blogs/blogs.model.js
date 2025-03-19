@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const BlogSchema = new mongoose.Schema({
+    Authorname: {
+        type: String,
+        required: true,
+
+    },
     title: {
         type: String,
         required: true
@@ -14,6 +19,11 @@ const BlogSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    status: {
+        type: String,
+        required: true,
+
+    },
     description: {
         type: String,
         required: true
@@ -23,9 +33,9 @@ const BlogSchema = new mongoose.Schema({
         ref: 'Team', // Assuming 'Team' is the collection for team members
         required: true
     },
-    createddate: {
+    date: {
         type: Date,
-        required: true
+        required:true
     }
 });
 
