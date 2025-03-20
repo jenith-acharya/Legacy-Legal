@@ -57,12 +57,12 @@ const TeamSection = () => {
   return (
     <>
       <Breadcrumbnavigation>Our Team</Breadcrumbnavigation>
-      <section className="py-12 bg-red-800"> {/* Red background for the section */}
+      <section className="py-12 bg-white-800"> {/* Red background for the section */}
         <div className="container mx-auto px-6">
-          <h1 className="text-4xl font-bold text-center text-white">
+          <h1 className="text-4xl font-bold text-center text-red-800">
             Meet Our Legal Experts
           </h1>
-          <p className="text-center text-gray-300 mt-2">
+          <p className="text-center text-red-800 mt-2">
             Experienced professionals dedicated to your success.
           </p>
           <NavLink to="/ourteam/">
@@ -70,7 +70,7 @@ const TeamSection = () => {
             {teamMembers.map((member, index) => (
               <div
                 key={index}
-                className="bg-white text-red-800 shadow-lg rounded-lg p-6 transition transform hover:scale-105 hover:shadow-xl" // White background for boxes and red text
+                className="bg-white text-red-800 shadow-lg rounded-lg p-6 transition transform border-solid hover:scale-105 hover:shadow-xl " // White background for boxes and red text
               >
                 {/* Adjusting the image size to be more vertically long */}
                 <img 

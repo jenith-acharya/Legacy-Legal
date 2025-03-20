@@ -10,8 +10,8 @@ import Heading1 from "../common/title";
 const Areasofpracticecomponent = () => {
   return (
    
-      <div>     <br />
-      <Heading1>Areas of Practice</Heading1><br/>
+      <div>     
+      <Heading1>Areas Of Practice</Heading1>
       <div className="bg-gray-100 py-10"> {/* Background color applied */}
       <br />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto p-4">

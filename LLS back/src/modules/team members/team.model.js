@@ -31,6 +31,14 @@ const TeamSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    title:{
+        type: String,
+        required: true
+    },
+    expertise: {
+        type:String,
+        required: true
+    },
     facebook: {
         type: String,
         unique: true

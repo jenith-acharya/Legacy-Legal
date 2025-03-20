@@ -15,6 +15,8 @@ Fullname: joi.string().min(3).max(100).required(),
     facebook: joi.string().uri().allow(null),
     twitter: joi.string().uri().allow(null),
     linkedin: joi.string().uri().allow(null),
+    title: joi.string().required(),
+    expertise: joi.string().required(),
     role: joi.object({
         label: joi.string().valid('admin', 'member').required(),
         value: joi.string().valid('admin', 'member').required(),
@@ -34,6 +36,8 @@ const TeamMemberUpdateDTO = joi.object({
             'string.pattern.base': 'Invalid phone number'
         }),
         facebook: joi.string().uri().allow(null),
+        title: joi.string().required(),
+        expertise: joi.string().required(),
         twitter: joi.string().uri().allow(null),
         linkedin: joi.string().uri().allow(null),
         role: joi.object({

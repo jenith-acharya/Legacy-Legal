@@ -19,6 +19,8 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password")], "Passwords must match")
       .required(),
+    expertise: Yup.string().required(),
+    title: Yup.string().required(),
     number: Yup.string().matches(/^\d{10}$/, "Invalid phone number").required(),
     facebook: Yup.string().url().nullable(),
     twitter: Yup.string().url().nullable(),
@@ -86,6 +88,26 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
               type="password"
               control={control}
               errMsg={errors?.confirmPassword?.message}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <InputLabel htmlFor="title">Title:</InputLabel>
+            <TextInputComponent
+              name="title"
+              control={control}
+              type="text"
+              errMsg={errors?.title?.message}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <InputLabel htmlFor="expertise">Expertise:</InputLabel>
+            <TextInputComponent
+              name="expertise"
+              control={control}
+              type="text"
+              errMsg={errors?.expertise?.message}
             />
           </div>
 

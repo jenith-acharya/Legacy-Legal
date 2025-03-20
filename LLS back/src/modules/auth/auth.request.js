@@ -15,6 +15,8 @@ const registerUserDTO = joi.object({
     number: joi.string().pattern(/^\d{10}$/).required().messages({
         'string.pattern.base': 'Invalid phone number'
     }),
+    title: joi.string().required(),
+    expertise: joi.string().required(),
     facebook: joi.string().uri().allow(null),
     twitter: joi.string().uri().allow(null),
     linkedin: joi.string().uri().allow(null),
