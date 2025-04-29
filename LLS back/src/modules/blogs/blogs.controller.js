@@ -1,27 +1,46 @@
-const { uploadImage } = require("../../config/cloudinary.config");
+const { uploadImage, cloudinary } = require("../../config/cloudinary.config");
 const { deleteFile } = require("../../../utilis/helper");
 const blogService = require("./blogs.services");
+const slugify = require('slugify'); 
+
+const getCloudinaryUrl = (publicId) => {
+  return `https://res.cloudinary.com/${cloudinary.config().cloud_name}/image/upload/${publicId}`;
+};
+
 
 class BlogController {
   
   // Create a new blog post
+
   createBlog = async (req, res, next) => {
     try {
       const data = req.body;
       const image = req.file;
-
-      // Upload image if provided
-      if (image) {
-        const imageUrl = await uploadImage(`./public/uploads/blogs/${image.filename}`);
-        data.image = imageUrl;
+  
+      
+      
+        const publicId = await uploadImage(`./public/uploads/blogs/${image.filename}`);
+        data.image = publicId;
+        // console.log("Image", data.image)
         deleteFile(`./public/uploads/blogs/${image.filename}`);
+      
+  
+      
+      if (!data.title) {
+        throw { statusCode: 422, message: 'Blog title is required to generate slug' };
       }
+  
 
-      data.createdBy = req.authUser.id;
+      data.slug = slugify(data.title, { lower: true, strict: true }); 
+      
+  
+      
+      data.createdBy = req.authUser._id;
+      
       const response = await blogService.createBlog(data);
-
+  
       res.json({
-        result: response,
+        data: response,
         message: "Blog post created successfully",
         meta: null,
       });
@@ -30,7 +49,7 @@ class BlogController {
       next(exception);
     }
   };
-
+  
   // List all blog posts
   listBlogs = async (req, res, next) => {
     try {
@@ -41,10 +60,14 @@ class BlogController {
         filter.title = { $regex: search, $options: "i" };
       }
 
-      const { blogs, totalPages, total, currentPage } = await blogService.listBlogs(page, limit, filter);
+      const { blogs, totalPages, total, currentPage } = await blogService.listblogs(page, limit, filter);
 
+      blogs.forEach(blog => {
+        blog.image = getCloudinaryUrl(blog.image); // Use the URL function here
+      });
+      
       res.json({
-        result: blogs,
+        data: blogs,
         message: "List of blog posts",
         meta: {
           total,
@@ -65,13 +88,18 @@ class BlogController {
       let filter = {};
       
       if (search) {
-        filter.title = { $regex: search, $options: "i" };
+        filter.title = { $regex: search, $options: "i" }
+        
       }
 
-      const { blogs, totalPages, total, currentPage } = await blogService.listBlogs(page, limit, filter);
+      const { blogs, totalPages, total, currentPage } = await blogService.listblogs(page, limit, filter);
+
+      blogs.forEach(blog => {
+        blog.image = getCloudinaryUrl(blog.image); 
+      });
 
       res.json({
-        result: blogs,
+        data: blogs,
         message: "List of blogs for admin",
         meta: {
           total,
@@ -88,14 +116,19 @@ class BlogController {
   // View a single blog post
   viewBlog = async (req, res, next) => {
     try {
-      const { id } = req.params;
-      if (!id) {
-        throw { statusCode: 400, message: "Blog ID is required" };
+      const blog = req.params.blogsName;
+      if (!blog) {
+        throw { statusCode: 400, message: "blogName is required" };
       }
-      const blogDetail = await blogService.getDetailById({ _id: id });
+      const blogDetail = await blogService.getDetailByFilter({ title: blog });
+      if (!blogDetail) {
+        throw { statusCode: 404, message: "blog not found" };
+      }
+
+      
       res.status(200).json({
         result: blogDetail,
-        message: "Blog post details retrieved successfully",
+        message: "Blog detail",
         meta: null,
       });
     } catch (exception) {
@@ -104,15 +137,46 @@ class BlogController {
   };
 
   // View a single blog post for Admin
-  viewBlogForAdmin = async (req, res, next) => {
+  // View a single blog post for Admin
+viewBlogForAdmin = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      throw { statusCode: 400, message: "Blog ID is required" };
+    }
+
+    // Fetch the blog detail by ID
+    const blogDetail = await blogService.getDetailById({ _id: id });
+
+    // Check if blogDetail is an array or object and format the image URL
+    if (Array.isArray(blogDetail)) {
+      blogDetail.forEach(blog => {
+        blog.image = getCloudinaryUrl(blog.image); // Use the URL function here
+      });
+    } else {
+      blogDetail.image = getCloudinaryUrl(blogDetail.image); // If it's a single object, format the image URL
+    }
+
+    res.status(200).json({
+      data: blogDetail,
+      message: "Blog post details for admin retrieved successfully",
+      meta: null,
+    });
+  } catch (exception) {
+    next(exception);
+  }
+};
+
+
+  viewBlogByName = async (req, res, next) => {
     try {
-      const { id } = req.params;
-      if (!id) {
-        throw { statusCode: 400, message: "Blog ID is required" };
+      const { name } = req.params;
+      if (!name) {
+        throw { statusCode: 400, message: "Blog Name is required" };
       }
-      const blogDetail = await blogService.getDetailById({ _id: id });
+      const blogDetail = await blogService.getDetailByTitle({ name: name });
       res.status(200).json({
-        result: blogDetail,
+        data: blogDetail,
         message: "Blog post details for admin retrieved successfully",
         meta: null,
       });
@@ -124,19 +188,26 @@ class BlogController {
   // Edit a blog post
   editBlog = async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const  id = req.params.id;
       if (!id) {
         throw { statusCode: 400, message: "Blog ID is required" };
       }
       const data = req.body;
       const image = req.file;
+
       if (image) {
-        const imageUrl = await uploadImage(`./public/uploads/blogs/${image.filename}`);
-        data.image = imageUrl;
+        console.log("Image", image)
+        const publicId = await uploadImage(`./public/uploads/blogs/${image.filename}`);
+        data.image = publicId;
         deleteFile(`./public/uploads/blogs/${image.filename}`);
       }
-      const response = await blogService.updateById(id, data);
-      res.json({ result: response, message: "Blog post updated successfully", meta: null });
+
+      console.log(data);
+      console.log(id);
+
+      const response = await blogService.updateBlogByID(id, data);
+  
+      res.json({ data: response, message: "Blog post updated successfully", meta: null });
     } catch (exception) {
       next(exception);
     }
@@ -147,7 +218,7 @@ class BlogController {
     try {
       const { id } = req.params;
       await blogService.deleteById(id);
-      res.json({ result: null, message: "Blog post deleted successfully", meta: null });
+      res.json({ data: null, message: "Blog post deleted successfully", meta: null });
     } catch (exception) {
       next(exception);
     }

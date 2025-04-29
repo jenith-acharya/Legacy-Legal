@@ -1,27 +1,25 @@
 import Heading1 from "../../components/common/title";
 import { toast } from "react-toastify";
 import { useState } from "react";
-
 import BlogsSvc from "./blogs.service";
 import { useNavigate } from "react-router-dom";
-import BlogsformComponent from "../../components/blogs/blogs.form.component";
-
+import LoadingComponent from "../../components/common/loading/loading.component"; 
+import BlogsformComponent from "../../components/blogs/blogs.form.component"; 
 const BlogsCreatePage = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  
-  const submitEvent = async(data: any) => {
+  const submitEvent = async (data: any) => {
     setLoading(true);
     try {
-       const submitData = {
+      const submitData = {
         ...data,
-        status: data.status.value 
-       }
-      await BlogsSvc.postRequest("/blogs/", submitData, {auth:true, file:true})
-        toast.success("blogs created sucessfully");
-        navigate("/admin/blogs/")
+        status: data.status.value,
+      };
+      await BlogsSvc.postRequest("/blogs/", submitData, { auth: true, file: true });
+      toast.success("Blog created successfully");
+      navigate("/admin/blogs/");
     } catch (exception) {
       console.error(exception);
       toast.error("Error while creating blog");
@@ -29,7 +27,6 @@ const BlogsCreatePage = () => {
       setLoading(false);
     }
   };
-
 
   return (
     <>
@@ -42,7 +39,13 @@ const BlogsCreatePage = () => {
       <div>
         <div className="py-3 px-4 lg:py-14">
           <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white"></h2>
-          <BlogsformComponent submitEvent={submitEvent} loading={loading}/>
+          {loading ? (
+            <>
+              <LoadingComponent />
+            </>
+          ) : (
+            <BlogsformComponent submitEvent={submitEvent} loading={loading} />
+          )}
         </div>
       </div>
     </>

@@ -12,14 +12,16 @@ class BlogService {
         }
     };
 
+     
+
     // Get all blog posts with pagination and filtering
-    listBlogs = async (currentPage = 1, limit = 5, filter = {}) => {
+    listblogs = async (currentPage = 1, limit = 5, filter = {}) => {
         try {
             const skip = (currentPage - 1) * limit;
             const total = await BlogModel.countDocuments(filter);
             const totalPages = Math.ceil(total / limit);
             const blogs = await BlogModel.find(filter)
-                .populate('createdBy', ["_id", "name", "email"])
+                .populate('createdBy', ["_id", "name", "email", "image"])
                 .skip(skip)
                 .limit(limit)
                 .sort({ _id: 'desc' });
@@ -71,13 +73,27 @@ class BlogService {
     };
 
     // Update a blog post by title
-    updateBlogByTitle = async (title, data) => {
+    updateBlogByID = async (id, data) => {
         try {
-            const response = await BlogModel.findOneAndUpdate({ title }, data, { new: true });
+            
+            const response = await BlogModel.findByIdAndUpdate( id , data, { new: true });
             if (!response) {
                 throw { statusCode: 404, message: "Blog post not found" };
             }
             return response;
+        } catch (exception) {
+            throw exception;
+        }
+    };
+
+    getDetailById = async (id) => {
+        try {
+            const blogDetail = await BlogModel.findById(id).populate('createdBy', ['_id', 'name', 'email']);
+            if (blogDetail) {
+                return blogDetail;
+            } else {
+                throw { statusCode: 422, message: "Unable to process request" };
+            }
         } catch (exception) {
             throw exception;
         }

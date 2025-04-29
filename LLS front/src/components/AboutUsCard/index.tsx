@@ -1,5 +1,6 @@
 import Heading1 from "../common/title";
 import { Button } from "flowbite-react";
+import logo from "../../assets/logo.svg";
 const Aboutus =() => {
     return(
       
@@ -11,7 +12,7 @@ const Aboutus =() => {
         <div className="flex items-center justify-between p-8 bg-gray-100">
             <div className="w-1/2">
                 <img 
-                    src="https://legacylegal.com.np/wp-content/uploads/2024/10/Untitled.bmp" 
+                    src={logo}
                     alt="About Us" 
                     className="w-3/4 h-auto rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
                 />

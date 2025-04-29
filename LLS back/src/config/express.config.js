@@ -4,6 +4,8 @@ const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 require('dotenv').config();
+app.use(express.json());
+
 
 require('./db.config')
 
@@ -12,7 +14,7 @@ const router = require('./router.config');
 // Use middlewares properly
 app.use(morgan('dev'));
 app.use(cors());
-app.use(express.json()); // Ensures JSON body parsing
+app.use(express.json()); 
 
 app.use(router);
 

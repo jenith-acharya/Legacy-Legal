@@ -1,15 +1,10 @@
-import { HiCog, HiDocumentAdd, HiHome, HiScale, HiUserAdd } from "react-icons/hi";
+import {  HiDocumentAdd, HiHome, HiScale, HiUserAdd } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 
 const adminMenu = [
   {name:"Home",
-  url:"/",
+  url:"/admin",
   icons:<HiHome/>
-  },
-  {
-    name:"Dashboard",
-    url:"/admin",
-    icons:<HiCog/>
   },
   {
     name:"Team Member Management",
@@ -21,7 +16,7 @@ const adminMenu = [
     icons: <HiDocumentAdd/>
   },
   {name:"Areas of Practice",
-    url:"/admim/areas-of-practice",
+    url:"/admin/areasofpractice",
     icons: <HiScale/>
   }
 

@@ -9,9 +9,9 @@ const PracticeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    slug: {
+    slug:{
         type: String,
-        required: true,
+        required:true,
         unique: true
     },
     status:{

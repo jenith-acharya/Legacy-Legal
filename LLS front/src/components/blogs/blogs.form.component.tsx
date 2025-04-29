@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 
 const BlogsformComponent = ({detail=null, submitEvent, loading}: {detail?: any ,submitEvent:any, loading: boolean}) => {
 
+
     const blogsDTO = Yup.object({
         Authorname: Yup.string().min(3).max(100).required(),
-        date: Yup.date().required(), // Requires ISO 8601 date format
+        date: Yup.date().required(), 
         title: Yup.string().min(3).max(150).required(),
         status: Yup.object({
             label: Yup.string().matches(/^(Publish|Unpublish)$/).required(),
@@ -34,13 +35,13 @@ const BlogsformComponent = ({detail=null, submitEvent, loading}: {detail?: any ,
 
       useEffect(()=>{
         if (detail){
-          setValue("title", detail.title);
-          setValue("Authorname", detail.authorname);
-          setValue("status", detail.status);
-          setValue("date", detail.date);
-          setValue("image", detail.image);
-          setValue("description", detail.description);
-          setthumbnail(detail.image);
+          setValue("title", detail?.title);
+          setValue("Authorname", detail?.authorname);
+          setValue("status", detail?.status);
+          setValue("date", detail?.date);
+          setValue("image", detail?.image);
+          setValue("description", detail?.description);
+          setthumbnail(detail?.image);
         }
 
       },[detail])
@@ -123,7 +124,7 @@ const BlogsformComponent = ({detail=null, submitEvent, loading}: {detail?: any ,
             </div>
 
             <SubmitButton loading={loading}>
-              <FaPaperPlane className="me-3" /> Add Blog
+              <FaPaperPlane className="me-3" /> Publish Blog
             </SubmitButton>
             <CancelButton loading={loading}>
               <FaUndo className="me-3" /> Cancel

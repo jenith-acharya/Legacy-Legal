@@ -4,6 +4,7 @@ import Breadcrumbnavigation from "../../components/common/breadcrumb navigation/
 const BlogPage = () =>{
     return(<>
     <Breadcrumbnavigation>Blogs</Breadcrumbnavigation>
+    
     <BlogsComponentforPage/>
     
     </>)

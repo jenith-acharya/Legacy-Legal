@@ -1,22 +1,23 @@
 import Herosection from "../../components/herosection/herosection.tsx";
 import Aboutus from "../../components/AboutUsCard";
-import Ourteamcomponent from "../../components/Our Team/ourteamcard.tsx";
 import Areasofpracticecomponent from "../../components/practice/aop.tsx";
+import TeamSection from "../Our Team/index.tsx";
 
 
 const Landingpage=() => {
 
     return(
          <>
+        
         <Herosection/> 
         <br/>    
         
         <Aboutus/>
         <br />
-        
+        <br/>
         <Areasofpracticecomponent/>
         <br/>
-        <Ourteamcomponent/>
+        <TeamSection/>
         <br/>   
         
         </>

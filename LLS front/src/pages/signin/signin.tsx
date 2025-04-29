@@ -8,8 +8,10 @@ import { toast } from "react-toastify";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/auth.context";
 import { NavLink } from "react-router-dom";
+import { axiosInstance } from "../../config/axois.config";
 
 export const Signin = () => {
+    const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
   const LoginDTO = Yup.object({
     email: Yup.string().email().required(),
     password: Yup.string().required(),
@@ -21,28 +23,33 @@ export const Signin = () => {
   });
 
   const navigate = useNavigate();
-  const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
+  
 
   useEffect(() => {
     if (loggedInUser) {
       toast.info("You are already logged in");
       navigate('/' + loggedInUser.role);
     }
-  }, [loggedInUser, navigate]);
+  }, []);
 
   const login = async (data: any) => {
+    // console.log(data)
     try {
       setLoading(true);
-      const response: any = await authSvc.postRequest("/auth/signin", data);
-      console.log("Login Response:", response); // Debug log
-      localStorage.setItem("_at", response.result.token.token);
-      localStorage.setItem("_rt", response.result.token.refreshToken);
-      toast.success(`Welcome to ${response.result.userDetail.role}`);
-      setLoggedInUser(response.result.userDetail);
-      navigate("/" + response.result.userDetail.role);
+    //   const response: any = await axios.post("http://localhost:9000/auth/signin", data);
+      const response: any = await axiosInstance.post("/auth/signin", data);
+    //   console.log("Login Response:", response); 
+      localStorage.setItem("_at", response.data.token);
+      localStorage.setItem("_rt", response.data.refreshToken);
+      toast.success(`Welcome to ${response.data.userDetail.role}`);
+      setLoggedInUser(response.data.userDetail);
+      console.log(response.data)
+      navigate("/" + response.data.userDetail.role);
     } catch (exception: any) {
-      toast.error(exception.data);
-    } finally {
+        const errorMessage =
+          exception.response?.data?.message || "Login failed. Please try correct credentials.";
+        toast.error(errorMessage);
+      }finally {
       setLoading(false);
     }
   };
@@ -117,18 +124,18 @@ export const Signin = () => {
 
 export const ForgotPassword = () => {
     const [email, setEmail] = useState("");
-    const [fullName, setFullName] = useState(""); 
+    const [fullname, setFullName] = useState(""); 
     const [loading, setLoading] = useState(false);
   
     const handleForgotPassword = async () => {
         try {
             setLoading(true);
   
-            await authSvc.forgotPasswordRequest({ email, fullName });
+            await authSvc.forgotPasswordRequest({ email, fullname });
   
             toast.success("Password reset link sent to your email.");
         } catch (error: any) {
-            toast.error(error.message || "Error occurred");
+            toast.error(error.message || "Member not Found");
         } finally {
             setLoading(false);
         }
@@ -140,7 +147,7 @@ export const ForgotPassword = () => {
             
             <input
                 type="text"
-                value={fullName}
+                value={fullname}
                 onChange={(e) => setFullName(e.target.value)}
                 className="block w-full p-2 border border-gray-300 rounded-lg"
                 placeholder="Enter your full name"

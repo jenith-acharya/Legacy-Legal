@@ -1,8 +1,7 @@
 const bcrypt = require('bcryptjs');
 const mailService = require('../../../services/mail.service');
 const { randomStringGenerator } = require('../../../utilis/helper');
-const teamService = require('../team members/teammember.services');
-const { statusType } = require('../../config/constants.config');
+const teamService = require('../members/members.services');
 const jwt = require('jsonwebtoken');
 
 class AuthController {
@@ -21,8 +20,6 @@ class AuthController {
                 throw { statusCode: 422, message: 'Member not found' };
             }
     
-            console.log('Stored Hashed Password:', user.password);
-    
             const isMatch = bcrypt.compareSync(password, user.password);
             console.log('Password Comparison Result:', isMatch);
     
@@ -30,46 +27,60 @@ class AuthController {
                 throw { statusCode: 422, message: 'Credentials do not match' };
             }
     
-            if (user.status === statusType.ACTIVE || user.status === 'active') {
-                const token = jwt.sign(
-                    { sub: user._id },
-                    process.env.JWT_SECRET
+            if (user.status === 'active') {
+                
+                const accessToken = jwt.sign(
+                    { sub: user._id, role: user.role },
+                    process.env.JWT_SECRET,
+                    { expiresIn: '1h' } 
                 );
     
-                res.json({
-                    result: {
-                        userDetail: {
-                            _id: user._id,
-                            name: user.name,
-                            email: user.email,
-                            role: user.role,
-                        },
-                        token
+                
+                const refreshToken = jwt.sign(
+                    { sub: user._id },
+                    process.env.REFRESH_SECRET, 
+                    { expiresIn: '7d' } 
+                );
+    
+    
+                const userDetail = {
+                    _id: user._id,
+                    name: user.fullname,
+                    email: user.email,
+                    role: user.role,
+                };
+    
+                return res.json({
+                    data: {
+                        userDetail,
+                        token: accessToken,
+                        refreshToken: refreshToken 
                     },
                     message: "Login Success",
                     meta: null
                 });
+    
             } else {
                 throw { statusCode: 422, message: 'Your account has not been activated yet' };
             }
+    
         } catch (exception) {
             console.error('Exception:', exception);
             next(exception);
         }
     };
-    
 
 
     registerMember = async (req, res, next) => {
         try {
             let data = teamService.transformMemberCreate(req);
             console.log(data);
-
+            
             const user = await teamService.createMember(data);
             await mailService.sendActivationEmail(data);
 
             res.status(200).json({
-                result: user || null,
+                data: user || null,
                 message: "User registered successfully. Activation token sent successfully",
                 meta: null
             });
@@ -81,8 +92,9 @@ class AuthController {
 
     getLoggedInMember = async (req, res, next) => {
         try {
+            
             res.json({
-                result: req.authUser,
+                data: req.authUser,
                 message: 'User fetched successfully',
                 meta: null
             });
@@ -95,7 +107,7 @@ class AuthController {
     activateMember = async (req, res, next) => {
         try {
             const { token } = req.params;
-            if (!token || token.length < 10) {  // Improved token length check
+            if (!token || token.length < 10) { 
                 throw { statusCode: 422, message: 'Invalid activationToken' };
             }
 
@@ -111,11 +123,11 @@ class AuthController {
 
             user.activationToken = null;
             user.activatedFor = null;
-            user.status = statusType.ACTIVE;
+            user.status = "active";
             await user.save();
 
             res.json({
-                result: null,
+                data: null,
                 message: 'User activated successfully. Please login to continue.',
                 meta: null
             });
@@ -142,7 +154,7 @@ class AuthController {
             });
 
             res.json({
-                result: null,
+                data: null,
                 message: 'Activation token sent successfully',
                 meta: null
             });
@@ -159,7 +171,7 @@ class AuthController {
                 throw { statusCode: 401, message: 'Token required' };
             }
     
-            const { sub, type } = jwt.verify(token, process.env.JWT_SECRET);
+            const { sub, type } = jwt.verify(token, process.env.REFRESH_SECRET);
     
             if (!type || type !== 'refresh') {
                 throw { statusCode: 401, message: 'Refresh token required' };
@@ -171,10 +183,10 @@ class AuthController {
             }
     
             const accessToken = jwt.sign({ sub }, process.env.JWT_SECRET, { expiresIn: '1 day' });
-            const refreshToken = jwt.sign({ sub, type: 'refresh' }, process.env.JWT_SECRET, { expiresIn: '1 day' });
+            const refreshToken = jwt.sign({ sub, type: 'refresh' }, process.env.REFRESH_SECRET, { expiresIn: '1 day' });
     
             res.json({
-                result: {
+                data: {
                     token: accessToken,
                     refreshToken: refreshToken,
                 },
@@ -204,7 +216,7 @@ class AuthController {
                 to: email,
                 subject: "Password Reset Request",
                 message: `
-                    Dear ${user.fullName},<br>
+                    Dear Member,<br>
                     Click the following link to reset your password:<br>
                     <a href="${process.env.FRONTEND_URL || "legacylegal.com.np"}/reset-password/${forgetToken}">Reset Password</a>
                     <p>This link is valid for 1 hour.</p>
@@ -212,7 +224,7 @@ class AuthController {
             });
 
             res.json({
-                result: null,
+                data: null,
                 message: "Password reset link sent to your email",
                 meta: null
             });
@@ -241,7 +253,7 @@ class AuthController {
             await user.save();
 
             res.json({
-                result: null,
+                data: null,
                 message: "Password reset successful",
                 meta: null
             });

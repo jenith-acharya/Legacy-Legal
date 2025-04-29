@@ -17,7 +17,7 @@ const TeamListingPage = () => {
 
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState<string | null>();
+  const [search, setsearch] = useState<string | null>();
 
   const onPageChange = useCallback(async (page: number) => {
     setPagination({
@@ -35,12 +35,12 @@ const TeamListingPage = () => {
   const getAllTeams = useCallback(async ({ page = 1, limit = 5, search = "" }: SearchParams) => {
     setLoading(true);
     try {
-      const response: any = await TeamSvc.getRequest("/team", {
+      const response: any = await TeamSvc.getRequest("/member", {
         auth: true,
-        params: { limit, page, search },
+        params: { limit:limit, page:page, search:search },
       });
 
-      setTeams(response.result);
+      setTeams(response.data);
       setPagination({
         currentPage: response.meta.currentPage,
         totalpages: Math.ceil(response.meta.totalPages / response.meta.limit),
@@ -77,8 +77,9 @@ const TeamListingPage = () => {
         confirmButtonText: "Yes, delete it!",
       });
 
+
       if (result.isConfirmed) {
-        await TeamSvc.deleteRequest(`/team/${id}`, { auth: true });
+        await TeamSvc.deleteRequest("/member/"+id, { auth: true });
         toast.success("Team member deleted successfully");
         getAllTeams({ page: 1, limit: 5 });
       }
@@ -93,7 +94,7 @@ const TeamListingPage = () => {
       <div className="overflow-x-auto mt-5 mb-5 ml-2 mr-2">
         <HeadingWithLink
           title="Team Management"
-          link="/admin/team/create"
+          link="/admin/teammembers/create"
           btntxt="Add Member"
         />
         <br />
@@ -104,7 +105,7 @@ const TeamListingPage = () => {
         <TextInput
           className="w-1/4"
           type="search"
-          onChange={(e: any) => setSearch(e.target.value)}
+          onChange={(e: any) => setsearch(e.target.value)}
         />
       </div>
 
@@ -139,7 +140,7 @@ const TeamListingPage = () => {
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {row.fullname}
                         </Table.Cell>
-                        <Table.Cell>{row.email}</Table.Cell>
+                        <Table.Cell>{row.email} </Table.Cell>
                         <Table.Cell>
                           <Badge color={row.role === "admin" ? "green" : "blue"}>
                             {row.role}
@@ -147,7 +148,7 @@ const TeamListingPage = () => {
                         </Table.Cell>
                         <Table.Cell className="flex gap-3">
                           <ActionButtons
-                            editUrl={`/admin/team/${row._id}/edit`}
+                            editUrl={`/admin/teammembers/edit/${row._id}`}
                             deleteAction={deleteData}
                             rowId={row._id}
                           />

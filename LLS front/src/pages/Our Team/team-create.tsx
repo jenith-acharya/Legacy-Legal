@@ -1,9 +1,9 @@
 import Heading1 from "../../components/common/title";
 import { toast } from "react-toastify";
 import { useState } from "react";
-
 import TeamSvc from "./team.service";
 import { useNavigate } from "react-router-dom";
+import LoadingComponent from "../../components/common/loading/loading.component"; // Ensure this is the correct import for your loading component.
 import TeamFormComponent from "../../components/team/team-form.component";
 
 const TeamCreatePage = () => {
@@ -16,9 +16,9 @@ const TeamCreatePage = () => {
     try {
       const submitData = {
         ...data,
-        role: data.role.value, // Ensure role is properly formatted
+        role: data.role.value,
       };
-      await TeamSvc.postRequest("/auth/register", submitData, { auth: true, file: true });
+      await TeamSvc.postRequest("/member/", submitData, { auth: true, file: true });
       toast.success("Team member registered successfully");
       navigate("/admin/teammembers/");
     } catch (exception) {
@@ -40,7 +40,13 @@ const TeamCreatePage = () => {
       <div>
         <div className="py-3 px-4 lg:py-14">
           <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white"></h2>
-          <TeamFormComponent submitEvent={submitEvent} loading={loading} />
+          {loading ? (
+            <>
+              <LoadingComponent />
+            </>
+          ) : (
+            <TeamFormComponent submitEvent={submitEvent} loading={loading} />
+          )}
         </div>
       </div>
     </>

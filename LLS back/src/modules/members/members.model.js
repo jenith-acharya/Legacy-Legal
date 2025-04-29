@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const TeamSchema = new mongoose.Schema({
-    fullName: {   
+    fullname: {   
         type: String,
         required: true
     },
@@ -11,7 +11,6 @@ const TeamSchema = new mongoose.Schema({
     },
     phone: {   
         type: String,
-        unique: true,
         required: true
     },
     status: {
@@ -20,7 +19,6 @@ const TeamSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: true
     },
     password: {
@@ -30,6 +28,9 @@ const TeamSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true
+    },
+    slug:{
+        type: String,
     },
     title:{
         type: String,
@@ -41,15 +42,12 @@ const TeamSchema = new mongoose.Schema({
     },
     facebook: {
         type: String,
-        unique: true
     },
     twitter: {
         type: String,
-        unique: true
     },
     linkedin: {
         type: String,
-        unique: true
     },
     activationToken: {
         type: String

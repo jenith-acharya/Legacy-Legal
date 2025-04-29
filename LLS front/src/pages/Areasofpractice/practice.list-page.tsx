@@ -34,7 +34,7 @@ const PracticeListingPage = () => {
     setLoading(true);
     try {
       const response: any = await PracticeSvc.getRequest("/practice", { auth: true, params: { limit: limit, page: page, search: search } });
-      setPractices(response.result);
+      setPractices(response.data);
       setpagination({
         currentPage: response.meta.currentPage,
         totalpages: Math.ceil(response.meta.totalPages / response.meta.limit)
@@ -98,7 +98,7 @@ const PracticeListingPage = () => {
       <div className="overflow-x-auto mt-5 mb-5 ml-2 mr-2">
         <HeadingWithLink
           title="Practice Management"
-          link="/admin/practice/create"
+          link="/admin/areasofpractice/create"
           btntxt="Add Practice"
         />
         <br />

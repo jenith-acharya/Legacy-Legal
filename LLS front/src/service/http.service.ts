@@ -18,9 +18,14 @@ class HttpService {
 
   // Set headers based on the configuration passed
   #setHeaders = (config: HeaderConfigProps) => {
-    this.headers = { 'Content-Type': 'application/json' };
-
-    if (config && config?.auth) {
+    
+    if (!config?.file) {
+      this.headers = { 'Content-Type': 'application/json' };
+    } else {
+      this.headers =  { 'Content-Type': 'multipart/form-data' };
+    }
+  
+    if (config?.auth) {
       const accessToken = localStorage.getItem("_at");
       if (accessToken) {
         this.headers = { ...this.headers, Authorization: `Bearer ${accessToken}` };
@@ -28,15 +33,12 @@ class HttpService {
         throw new Error("Authorization token missing");
       }
     }
-
-    if (config && config?.file) {
-      this.headers = { ...this.headers, 'Content-Type': 'multipart/form-data' };
-    }
-
+  
     if (config?.params) {
       this.params = { ...config.params };
     }
   };
+  
 
   // POST request method
   postRequest = async (url: string, data: any = {}, config: HeaderConfigProps = {}) => {
@@ -60,7 +62,9 @@ class HttpService {
         headers: { ...this.headers },
         params: { ...this.params },
       });
-      return response.data;
+      // console.log(response)
+      return response;      // {data:any, message: "", meta: any}
+      // return response.data;
     } catch (error: any) {
       this.#handleError(error);
     }
@@ -107,10 +111,10 @@ class HttpService {
   };
 
   // Forgot Password Request
-  forgotPasswordRequest = async ({ email, fullName }: { email: string; fullName: string }) => {
+  forgotPasswordRequest = async ({ email, fullname }: { email: string; fullname: string }) => {
     try {
         this.#setHeaders({});
-        const response = await axiosInstance.post("/auth/forgot-password", { email, fullName }, {
+        const response = await axiosInstance.post("/auth/forgot-password", { email, fullname }, {
             headers: { ...this.headers },
         });
         return response.data;

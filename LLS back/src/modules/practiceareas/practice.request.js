@@ -4,7 +4,6 @@ const joi = require('joi');
 
 const PracticeAreaCreateDTO = joi.object({
     title: joi.string().min(3).max(150).required(),
-    date: joi.date().iso().required(), // Ensures date follows ISO 8601 format
     status: joi.string().required(),
     image: joi.any().optional().default(null),
     description: joi.string().min(10).max(5000).required(),
@@ -12,7 +11,6 @@ const PracticeAreaCreateDTO = joi.object({
 
 const PracticeAreaUpdateDTO = joi.object({
     title: joi.string().min(3).max(150).required(),
-    date: joi.date().iso().required(), // Ensures date follows ISO 8601 format
     status: joi.string().required(),
     image: joi.any().optional().default(null),
     description: joi.string().min(10).max(5000).required(),

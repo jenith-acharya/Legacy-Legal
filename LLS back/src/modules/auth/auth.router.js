@@ -12,7 +12,7 @@ const authRouter = require('express').Router();
 
 //register user route
 
-authRouter.post('/register',bodyValidator(registerUserDTO), authcontroller.registerMember)
+authRouter.post('/register',setPath('members'),uploadFile().single('profile'),bodyValidator(registerUserDTO),authcontroller.registerMember)
 authRouter.post('/signin',bodyValidator(LoginDTO),authcontroller.loginMember);
 
 authRouter.get('/me',loginCheck,authcontroller.getLoggedInMember);

@@ -4,8 +4,9 @@ const cloudinary = require('cloudinary').v2;
 // Return "https" URLs by setting secure: true
 cloudinary.config({
   secure: true,
+  cloud_name: 'dorzscoif',
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 /////////////////////////
@@ -26,9 +27,11 @@ const uploadImage = async (imagePath) => {
       const result = await cloudinary.uploader.upload(imagePath, options);
       console.log(result);
       return result.public_id;
+
     } catch (error) {
       console.error(error);
     }
 };
 
-module.exports= {uploadImage};
+
+module.exports= {uploadImage, cloudinary};

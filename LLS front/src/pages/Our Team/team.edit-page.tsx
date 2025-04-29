@@ -1,14 +1,14 @@
 import Heading1 from "../../components/common/title";
 import { toast } from "react-toastify";
 import { useState } from "react";
-
+import { useParams } from "react-router-dom";
 import TeamSvc from "./team.service";
 import { useNavigate } from "react-router-dom";
 import TeamFormComponent from "../../components/team/team-form.component";
 
 const TeamEditPage = () => {
   const [loading, setLoading] = useState(false);
-
+  const params = useParams();
   const navigate = useNavigate();
 
   const submitEvent = async (data: any) => {
@@ -18,8 +18,8 @@ const TeamEditPage = () => {
         ...data,
         role: data.role.value, // Ensure role is properly formatted
       };
-      await TeamSvc.postRequest("/auth/register", submitData, { auth: true, file: true });
-      toast.success("Team member registered successfully");
+      await TeamSvc.patchRequest("/member/"+params.id, submitData, { auth: true, file: true });
+      toast.success("Team member updated successfully");
       navigate("/admin/teammembers/");
     } catch (exception) {
       console.error(exception);

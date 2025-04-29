@@ -12,11 +12,10 @@ const BlogSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
     },
-    slug: {
+    slug:{
         type: String,
-        required: true,
+        required:true,
         unique: true
     },
     status: {
@@ -28,10 +27,9 @@ const BlogSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    createdby: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Team', // Assuming 'Team' is the collection for team members
-        required: true
     },
     date: {
         type: Date,

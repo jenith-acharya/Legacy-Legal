@@ -3,7 +3,6 @@ const fs = require("fs");
 const { randomStringGenerator } = require("../../utilis/helper");
 const { fileFilterType } = require("../config/constants.config");
 
-// user,banner,brand,products
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const path = `./public/uploads/${req.uploadPath}`;
@@ -15,19 +14,22 @@ const storage = multer.diskStorage({
 
     cb(null, path);
   },
-  filename: function (req, file, cb) {
-    let fileExt = file.originalname.split(".").pop(); //returns an array of the file name and the extension and pop() returns the last element of the array
-    let filename = `${randomStringGenerator(10)}-${Date.now()}.${fileExt}`;
-    console.log(`File name is ${filename}`);
-    cb(null, filename);
+  fileFilter: (req, file, cb) => {
+    let fileExt = file.originalname.split(".").pop(); 
+    if (allowedExt.includes(fileExt.toLowerCase())) {
+      cb(null, true); // Accept file
+    } else {
+      cb(new Error(`File format not allowed`), false); // Reject file
+    }
   },
+  
 });
 
 // create a uploadfile middleware that takes file type and validates it
 const uploadFile = (fileType = fileFilterType.IMAGE) => {
-  const allowedExt = ["png", "jpg", "jpeg", "gif","webp"];
+  let allowedExt = ["png", "jpg", "jpeg", "gif","webp","bmp"];
   if (fileType == fileFilterType.DOC) {
-    allowedExt = ["pdf", "doc", "docx", "txt"];
+   allowedExt = ["pdf", "doc", "docx", "txt", "docx"];
   }
 
   return multer({
@@ -40,7 +42,7 @@ const uploadFile = (fileType = fileFilterType.IMAGE) => {
         cb({ code: 400, message: `file format not allowed` }, false);
       }
     },
-    // limits: { fileSize: 1024 * 1024 * 5 }, //5MB
+    limits: { fileSize: 1024 * 1024 * 5 }, //5MB
   });
 };
 

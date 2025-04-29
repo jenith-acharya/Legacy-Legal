@@ -26,7 +26,8 @@ const Blogslistingpage = () => {
     });
     await getallBlogs({
       page:1,
-      limit:5
+      limit:5,
+      search,
     })
   },[search])
 
@@ -35,10 +36,13 @@ const Blogslistingpage = () => {
     try {
       
       const response: any = await BlogsSvc.getRequest("/blogs", {auth:true , params:{limit:limit, page: page, search: search}})
-      setBlogs(response.result)
+      console.log(response)
+      
+      setBlogs(response.data)
+      
       setpagination({
-        currentPage :response.meta.currentPage,
-        totalpages: Math.ceil(response.meta.totalPages/ response.metal.limit)
+        currentPage:response.meta.currentPage,
+        totalpages: Math.ceil(response.meta.totalPages/ response.meta.limit)
 
       })
     } catch (exception) {
@@ -52,7 +56,7 @@ const Blogslistingpage = () => {
   useEffect(() => {
     getallBlogs({
       page: 1,
-      limit: 5,
+      limit: 5
     });
   }, []);
 
@@ -122,7 +126,7 @@ const Blogslistingpage = () => {
               Blog Name
             </Table.HeadCell>
             <Table.HeadCell className="bg-red-800 text-white">
-              Link
+              Author Name
             </Table.HeadCell>
             <Table.HeadCell className="bg-red-800 text-white">
               Image
@@ -132,6 +136,7 @@ const Blogslistingpage = () => {
             </Table.HeadCell>
             <Table.HeadCell className="bg-red-800 text-white">
               Action
+              
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -147,12 +152,13 @@ const Blogslistingpage = () => {
                       <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={index}>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {row.title}
+                          
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {row.Authorname}
                         </Table.Cell>
                         <Table.Cell>
-                          <a href={row.link} target="_blogs" className="text-blue-700"> Go To Link</a>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <img src={row.image} className="w-24 "/>
+                          <img src={row.image} className=" w-24 "/>
                         </Table.Cell>
                         <Table.Cell>
                           <Badge color={row.status ==="active"? "green" : "red"}>
@@ -161,7 +167,7 @@ const Blogslistingpage = () => {
                         </Table.Cell>
                         <Table.Cell className="flex gap-3">
                           <ActionButtons
-                          editUrl={`admin/blogs/${row._id}/edit`}
+                          editUrl={`/admin/blogs/edit/${row._id}`}
                           deleteAction={deleteData}
                           rowId={row._id}/>
                         </Table.Cell>

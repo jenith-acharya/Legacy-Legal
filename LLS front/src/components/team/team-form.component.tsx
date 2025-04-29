@@ -21,7 +21,7 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
       .required(),
     expertise: Yup.string().required(),
     title: Yup.string().required(),
-    number: Yup.string().matches(/^\d{10}$/, "Invalid phone number").required(),
+    phone: Yup.string().matches(/^\d{10}$/, "Invalid phone number").required(),
     facebook: Yup.string().url().nullable(),
     twitter: Yup.string().url().nullable(),
     linkedin: Yup.string().url().nullable(),
@@ -113,11 +113,11 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
 
           {/* Phone Number */}
           <div className="sm:col-span-2">
-            <InputLabel htmlFor="number">Phone Number:</InputLabel>
+            <InputLabel htmlFor="phone">Phone Number:</InputLabel>
             <TextInputComponent
-              name="number"
+              name="phone"
               control={control}
-              errMsg={errors?.number?.message}
+              errMsg={errors?.phone?.message}
             />
           </div>
 

@@ -4,22 +4,16 @@ import { useForm } from "react-hook-form";
 import {
   InputLabel,
   TextInputComponent,
-  RoleSelectComponent,
   SubmitButton,
   CancelButton
 } from "../common/form/input.component";
 import { FaPaperPlane, FaUndo } from "react-icons/fa";
 
-const PracticeFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading: boolean }) => {
+const PracticeFormComponent = ({ details, submitEvent, loading }: {details?:any, submitEvent: any; loading: boolean }) => {
 
   const practiceDTO = Yup.object({
     title: Yup.string().min(3).max(150).required(),
-    date: Yup.date().required(),
-    link: Yup.string().url().nullable().required(),
-    role: Yup.object({
-      label: Yup.string().matches(/^(admin|member)$/).required(),
-      value: Yup.string().matches(/^(admin|member)$/).required(),
-    }).required(),
+    status: Yup.string().required(),
     image: Yup.mixed().optional().default(null),
     description: Yup.string().min(10).max(5000).required(),
   });
@@ -49,38 +43,6 @@ const PracticeFormComponent = ({ submitEvent, loading }: { submitEvent: any; loa
             />
           </div>
 
-          
-
-          {/* Date */}
-          <div className="sm:col-span-2">
-            <InputLabel htmlFor="date">Date:</InputLabel>
-            <TextInputComponent
-              name="date"
-              type="date"
-              control={control}
-              errMsg={errors?.date?.message}
-            />
-          </div>
-
-          {/* Link */}
-          <div className="sm:col-span-2">
-            <InputLabel htmlFor="link">Link:</InputLabel>
-            <TextInputComponent
-              name="link"
-              control={control}
-              errMsg={errors?.link?.message}
-            />
-          </div>
-
-          {/* Role */}
-          <div className="w-full">
-            <InputLabel htmlFor="role">Role:</InputLabel>
-            <RoleSelectComponent
-              name="role"
-              control={control}
-              errMsg={errors?.role?.message || ""}
-            />
-          </div>
 
           {/* Image Upload */}
           <div className="sm:col-span-2">

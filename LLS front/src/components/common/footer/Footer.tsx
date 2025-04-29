@@ -9,7 +9,8 @@ const Footercomponent=()=>{
     <Footer container className="bg-black rounded-none text-white">
       <div className="w-full">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-          <div><img  className="w-64 h-32" src="https://legacylegal.com.np/wp-content/uploads/2024/10/Untitled.bmp" alt="logos"  /></div>
+          <div> <a href="/">
+            <img  className="w-64 h-32" src="https://legacylegal.com.np/wp-content/uploads/2024/10/Untitled.bmp" alt="logos"  /> </a></div>
           <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
             <div>
               <Footer.Title className="text-white" title="Navigate" />

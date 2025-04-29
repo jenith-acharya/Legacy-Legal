@@ -1,9 +1,10 @@
 const bcrypt = require("bcryptjs");
 const mailService = require("../../../services/mail.service");
 const { randomStringGenerator, deleteFile } = require("../../../utilis/helper");
-const TeamModel = require("./team.model");
+const TeamModel = require("./members.model");
 const { uploadImage } = require("../../config/cloudinary.config");
-
+const slugify = require('slugify');
+  
 class TeamService {
   
   // Generate activation token for team members
@@ -13,27 +14,37 @@ class TeamService {
   };
 
   // Transform team member creation data
+  
+  
+
+  
   transformMemberCreate = async (req) => {
     try {
-        let data = req.body;
-
-        if (!data.password) {
-            throw { statusCode: 422, message: 'Password is required' };
-        }
-
-        const salt = bcrypt.genSaltSync(10);
-        data.password = bcrypt.hashSync(data.password, salt);
-        delete data.confirmPassword;
-
-        data = this.generateMemberActivationToken(data);
-        data.status = "inactive";
-
-        return data;
+      let data = req.body;
+  
+      if (!data.password) {
+        throw { statusCode: 422, message: 'Password is required' };
+      }
+  
+      const salt = bcrypt.genSaltSync(10);
+      data.password = bcrypt.hashSync(data.password, salt);
+      delete data.confirmPassword;
+  
+      if (!data.fullname) {
+        throw { statusCode: 422, message: 'Fullname is required for slug generation' };
+      }
+      data.slug = slugify(data.fullname, { lower: true, strict: true });
+  
+      data = this.generateMemberActivationToken(data);
+      data.status = "active";
+  
+      return data;
     } catch (error) {
-        console.error("Error at transform member creation service", error);
-        throw error;
+      console.error("Error at transform member creation service", error);
+      throw error;
     }
-};
+  };
+  
 
   // Send activation email to team member
   sendActivationEmail = async ({
@@ -47,11 +58,11 @@ class TeamService {
         to: email,
         sub: sub,
         message: `
-          Dear ${name},<br>
+          Dear ${name.fullname},<br>
           Your team member account has been created successfully. Please activate your account using the link below:<br>
           <a href="${process.env.FRONTEND_URL}/activate/${activationToken}">Activate Now</a>
           <p><small>This is an automated email. Please do not reply.</small></p>
-          <p>Regards,<br>Team</p>
+          <p>Regards,<br>Legacy Legal Services</p>
         `,
       });
     } catch (error) {
@@ -97,7 +108,7 @@ class TeamService {
       if (memberDetail) {
         return memberDetail;
       } else {
-        throw { statusCode: 422, message: "Unable to process request" };
+        throw { statusCode: 422, message: "Member Not Found" };
       }
     } catch (error) {
       throw error;
@@ -109,6 +120,7 @@ class TeamService {
     try {
       const skip = (page - 1) * limit;
       const members = await TeamModel.find(search, "-password -activationToken -createdAt -updatedAt")
+        // .populate("createdBy") Repository pattern, modular pattern
         .skip(skip)
         .limit(limit);
       return members;
@@ -129,6 +141,23 @@ class TeamService {
       throw error;
     }
   };
+  listMembers = async (currentPage = 1, limit = 5, filter = {}) => {
+    try {
+      const skip = (currentPage - 1) * limit;
+      const total = await TeamModel.countDocuments(filter);
+      const totalPages = Math.ceil(total / limit);
+      const members = await TeamModel.find(filter)
+        .select('_id fullname email role slug title expertise facebook twitter linkedin image createdAt') 
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: 'desc' });
+  
+      return { members, totalPages, total, limit, currentPage };
+    } catch (exception) {
+      throw exception;
+    }
+  };
+  
 
   // Update a team member by ID
   updateById = async (id, data) => {
@@ -151,13 +180,12 @@ class TeamService {
         throw { statusCode: 404, message: "Team member not found" };
       }
       return response;
-    } catch (error) {
-      throw error;
+    } catch (exception) {
+      throw exception;
     }
   };
 }
 
-// Create an instance of TeamService
 const teamService = new TeamService();
 
 module.exports = teamService;

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const userService = require('../modules/team members/teammember.services');
+const userService = require('../modules/members/members.services');
 
 const loginCheck = async (req, res, next) => {
     try {

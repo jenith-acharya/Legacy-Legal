@@ -15,13 +15,14 @@ const BlogsEditPage = () => {
 
   const getDetail = async () => {
     try {
-      const detail = await BlogsSvc.getRequest("/blogs/"+params.id, {
+      const detail: any = await BlogsSvc.getRequest("/blogs/"+params.id, {
         auth: true
       });
       
-      setblogs(detail.result);
+      console.log(detail)
+      
+      setblogs(detail.data);
       setLoading(false);
-      console.log(detail);
 
     }catch(exception) {
       toast.error("error while fetching data");
@@ -40,6 +41,9 @@ const BlogsEditPage = () => {
         ...data,
         status: data.status.value,
       };
+
+      // console.log("submitData", submitData)
+      //
       await BlogsSvc.patchRequest("/blogs/"+params.id, submitData, {
         auth: true,
         file: true,
@@ -54,6 +58,7 @@ const BlogsEditPage = () => {
     }
   };
 
+  // console.log(blogs)
   return (
     <>
       <div className="overflow-x-auto mt-5 mb-5 ml-2 mr-2">
@@ -74,18 +79,18 @@ const BlogsEditPage = () => {
             <>
               {" "}
               <BlogsformComponent detail = {{
-                        Authorname:blogs.authorname ,
-                        date: blogs.date, 
-                        title: blogs.title,
-                        link: blogs.link,
+                        Authorname:blogs?.Authorname,
+                        date: blogs?.date, 
+                        title: blogs?.title,
+                        link: blogs?.link,
                         status: {
-                            label: blogs.status === "active" ? "Publish" : "Unpublish" ,
-                            value: blogs.status
+                            label: blogs?.status === "active" ? "Publish" : "Unpublish" ,
+                            value: blogs?.status
                         },
-                        image: blogs.image,
-                        description: blogs.description,
+                        image: blogs?.image,
+                        description: blogs?.description,
 
-              }}submitEvent={submitEvent} loading={loading} />
+              }} submitEvent={submitEvent} loading={loading} />
             </>
           )}
         </div>
