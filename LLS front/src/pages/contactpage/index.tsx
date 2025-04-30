@@ -1,13 +1,71 @@
-import { useState } from "react";
+import  { useState } from "react";
+import Swal from 'sweetalert2';
 
 const Contactform = () => {
-  const [name, setname] = useState<string>("");
-  const [email, setemail] = useState<string>("");
-  const [message, setmessage] = useState<string>("");
-  const [subject, setsubject] = useState<string>("");
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const [result, setResult] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [subject, setSubject] = useState<string>("");
+
+  const onSubmit = async (event: any) => {
+    event.preventDefault();
+    setResult("Sending....");
+
+    // Create a new FormData object to send the form data
+    const formData = new FormData(event.target);
+
+    // Manually append the form fields to the FormData object
+    formData.append("access_key", "391245ab-45de-4efb-8436-ae9156f2d057");
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("subject", subject);
+    formData.append("message", message);
+
+    // Log form data before submission for debugging
+    console.log("Form data being sent:", {
+      name,
+      email,
+      subject,
+      message
+    });
+
+    try {
+      // Send the form data using Fetch API to Web3Forms endpoint
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      // Parse the response from the Web3Forms API
+      const data = await response.json();
+      console.log(data); // Log the API response for debugging
+
+      // If the submission is successful, show a success message
+      if (data.success) {
+        Swal.fire({
+          title: "Success!",
+          text: "Message delivered successfully!",
+          icon: "success",
+        });
+      } else {
+        // If there's an error, show an error message
+        Swal.fire({
+          title: "Error",
+          text: "There was an issue sending your message. Please try again.",
+          icon: "error",
+        });
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Error submitting form:", error);
+      Swal.fire({
+        title: "Error",
+        text: "There was a network error. Please try again later.",
+        icon: "error",
+      });
+    }
   };
 
   return (
@@ -15,20 +73,16 @@ const Contactform = () => {
       <br />
       {/* Google Map Embed */}
       <div className="w-full h-64 mb-6">
-      <iframe
-  title="AHN Legal Location"
-  width="100%"
-  height="100%"
-  style={{ border: 0 }}
-  loading="lazy"
-  allowFullScreen
-  referrerPolicy="no-referrer-when-downgrade"
-  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCii6Dvpf-pk0W_xljWjzspAdkU9uH-Zek&q=M8GR+2HW,Kriti+Marg,Kathmandu,Nepal`}
-/>
-
-
-
-
+        <iframe
+          title="AHN Legal Location"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          loading="lazy"
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCii6Dvpf-pk0W_xljWjzspAdkU9uH-Zek&q=M8GR+2HW,Kriti+Marg,Kathmandu,Nepal`}
+        />
       </div>
 
       <div className="grid sm:grid-cols-2 items-start gap-16 p-4 mx-auto max-w-4xl bg-white font-[sans-serif]">
@@ -58,7 +112,7 @@ const Contactform = () => {
                 </div>
                 <a href="mailto:info@legacylegal.com.np" className="text-red-800 text-sm ml-4">
                   <small className="block">Mail</small>
-                  <strong>info@legacylegal.com.np</strong>
+                  <strong>legacylegal12345@gmail.com</strong>
                 </a>
               </li>
             </ul>
@@ -66,33 +120,33 @@ const Contactform = () => {
         </div>
 
         {/* Contact Form */}
-        <form onSubmit={handleSubmit} className="ml-auto space-y-4">
+        <form onSubmit={onSubmit} className="ml-auto space-y-4">
           <input
             type="text"
             placeholder="Name"
             value={name}
-            onChange={(e) => setname(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             className="w-full rounded-md py-3 px-4 bg-gray-100 text-gray-800 text-sm outline-red-800 focus:bg-transparent"
           />
           <input
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setemail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-md py-3 px-4 bg-gray-100 text-gray-800 text-sm outline-red-800 focus:bg-transparent"
           />
           <input
             type="text"
             placeholder="Subject"
             value={subject}
-            onChange={(e) => setsubject(e.target.value)}
+            onChange={(e) => setSubject(e.target.value)}
             className="w-full rounded-md py-3 px-4 bg-gray-100 text-gray-800 text-sm outline-red-800 focus:bg-transparent"
           />
           <textarea
             placeholder="Message"
             rows={6}
             value={message}
-            onChange={(e) => setmessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value)}
             className="w-full rounded-md px-4 bg-gray-100 text-gray-800 text-sm pt-3 outline-red-800 focus:bg-transparent"
           ></textarea>
           <button
@@ -102,6 +156,7 @@ const Contactform = () => {
             Send
           </button>
         </form>
+        <span>{result}</span>
       </div>
     </>
   );
