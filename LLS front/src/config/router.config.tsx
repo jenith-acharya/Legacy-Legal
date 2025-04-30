@@ -16,12 +16,12 @@ import Errorpage from "../components/common/error/notfounderror";
 import { TeamCreatePage, TeamEditPage, TeamListingPage } from "../pages/Our Team/exporting";
 import Areasofpracticecomponent from "../components/practice/aop";
 import BlogPage from "../pages/blogs/blogspage";
-import TeamSection from "../pages/Our Team";
 import ResetPassword from "../pages/signin/reset-password.page";
 import { PracticeCreatePage, PracticeEditPage, PracticeListingPage } from "../pages/Areasofpractice";
 import UserActivation from "../pages/auth/activate/activate.user.page";
 import Ourteamcomponent from "../components/Our Team/ourteamcard";
 import BlogOverview from "../pages/blogs/blogs.overview.component";
+import TeamOverview from "../pages/Our Team/team.overview.component";
 
 export const Routerconfig = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -62,7 +62,7 @@ export const Routerconfig = () => {
               <Route path="/aboutus" element={<Aboutuspage />} />
 
               <Route path="/ourteam" element={<Ourteamcomponent />} />
-              <Route path="/ourteam/:slug" element={<TeamSection />} />
+              <Route path="/ourteam/:id" element={<TeamOverview />} />
 
               <Route path="/areaofpractice" element={<Areasofpracticecomponent />} />
               <Route path="/areaofpractice/:slug" element={<Areasofpracticecomponent />} />

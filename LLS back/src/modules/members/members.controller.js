@@ -59,9 +59,13 @@ class MemberController {
 
       const members = await teamService.getSingleMemberById(id);
 
-      members.forEach(member => {
-        member.image = getCloudinaryUrl(member.image); // Use the URL function here
-      });
+      if (Array.isArray(members)) {
+        members.forEach(member => {
+          member.image = getCloudinaryUrl(member.image); // Use the URL function here
+        });
+      } else {
+        members.image = getCloudinaryUrl(members.image); // If it's a single object, format the image URL
+      }
 
       res.status(200).json({
         data: members,

@@ -49,6 +49,10 @@ const TeamSchema = new mongoose.Schema({
     linkedin: {
         type: String,
     },
+    description:{
+        type: String,
+        required: true
+    },
     activationToken: {
         type: String
     },
