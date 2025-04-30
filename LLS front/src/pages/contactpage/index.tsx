@@ -72,17 +72,8 @@ const Contactform = () => {
     <>
       <br />
       {/* Google Map Embed */}
-      <div className="w-full h-64 mb-6">
-        <iframe
-          title="AHN Legal Location"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          loading="lazy"
-          allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
-          src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCii6Dvpf-pk0W_xljWjzspAdkU9uH-Zek&q=M8GR+2HW,Kriti+Marg,Kathmandu,Nepal`}
-        />
+      <div className="w-full h-34 mb-6">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.363592545476!2d85.33885467377107!3d27.67515512691364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19002dc0e4ff%3A0xd2ce8e53498f4917!2sLegacy%20Legal%20Services!5e0!3m2!1sen!2snp!4v1745997637819!5m2!1sen!2snp" width="1500" height="250"  allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
       </div>
 
       <div className="grid sm:grid-cols-2 items-start gap-16 p-4 mx-auto max-w-4xl bg-white font-[sans-serif]">
