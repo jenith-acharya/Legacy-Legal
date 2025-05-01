@@ -6,12 +6,17 @@ import {
   TextInputComponent,
   RoleSelectComponent,
   SubmitButton,
-  CancelButton
+  CancelButton,
 } from "../common/form/input.component";
 import { FaPaperPlane, FaUndo } from "react-icons/fa";
 
-const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading: boolean }) => {
-
+const TeamFormComponent = ({
+  submitEvent,
+  loading,
+}: {
+  submitEvent: any;
+  loading: boolean;
+}) => {
   const teamDTO = Yup.object({
     fullname: Yup.string().min(3).max(100).required(),
     email: Yup.string().email().required(),
@@ -21,13 +26,19 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
       .required(),
     expertise: Yup.string().required(),
     title: Yup.string().required(),
-    phone: Yup.string().matches(/^\d{10}$/, "Invalid phone number").required(),
+    phone: Yup.string()
+      .matches(/^\d{10}$/, "Invalid phone number")
+      .required(),
     facebook: Yup.string().url().nullable(),
     twitter: Yup.string().url().nullable(),
     linkedin: Yup.string().url().nullable(),
     role: Yup.object({
-      label: Yup.string().matches(/^(admin|member)$/).required(),
-      value: Yup.string().matches(/^(admin|member)$/).required(),
+      label: Yup.string()
+        .matches(/^(admin|member)$/)
+        .required(),
+      value: Yup.string()
+        .matches(/^(admin|member)$/)
+        .required(),
     }).required(),
     image: Yup.mixed().optional().default(null),
     description: Yup.string().min(10).max(5000).required(),
@@ -47,7 +58,6 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
     <>
       <form onSubmit={handleSubmit(submitEvent)}>
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-
           {/* Full Name */}
           <div className="sm:col-span-2">
             <InputLabel htmlFor="fullname">Full Name:</InputLabel>
@@ -128,7 +138,9 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
               {...register("facebook")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors?.facebook && <p className="text-red-500">{errors.facebook.message}</p>}
+            {errors?.facebook && (
+              <p className="text-red-500">{errors.facebook.message}</p>
+            )}
           </div>
 
           {/* Twitter */}
@@ -138,7 +150,9 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
               {...register("twitter")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors?.twitter && <p className="text-red-500">{errors.twitter.message}</p>}
+            {errors?.twitter && (
+              <p className="text-red-500">{errors.twitter.message}</p>
+            )}
           </div>
 
           {/* LinkedIn */}
@@ -148,7 +162,9 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
               {...register("linkedin")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors?.linkedin && <p className="text-red-500">{errors.linkedin.message}</p>}
+            {errors?.linkedin && (
+              <p className="text-red-500">{errors.linkedin.message}</p>
+            )}
           </div>
 
           {/* Role */}
@@ -174,18 +190,21 @@ const TeamFormComponent = ({ submitEvent, loading }: { submitEvent: any; loading
             />
           </div>
           <div className="sm:col-span-2">
-              <InputLabel htmlFor="description">Description:</InputLabel>
-              <textarea
-                id="description"
-                rows={10}
-                {...register("description")} 
-                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Your description here"
-              />
-              {errors?.description && (
-                <p className="text-red-500 text-xs">{errors.description.message}</p>
-              )}
-            </div>
+            <InputLabel htmlFor="description">Description:</InputLabel>
+            <textarea
+              id="description"
+              rows={10}
+              {...register("description")}
+              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Your description here"
+              style={{ whiteSpace: "pre-wrap" }}
+            />
+            {errors?.description && (
+              <p className="text-red-500 text-xs">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
         </div>
         <br />
 

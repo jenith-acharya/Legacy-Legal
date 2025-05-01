@@ -132,7 +132,6 @@ export const ForgotPassword = () => {
             setLoading(true);
   
             await authSvc.forgotPasswordRequest({ email, fullname });
-  
             toast.success("Password reset link sent to your email.");
         } catch (error: any) {
             toast.error(error.message || "Member not Found");

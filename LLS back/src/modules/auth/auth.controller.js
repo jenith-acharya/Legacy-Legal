@@ -200,8 +200,8 @@ class AuthController {
     }
     forgotPassword = async (req, res, next) => {
         try {
-            const { email } = req.body;
-            const user = await teamService.getSingleMemberByFilter({ email });
+            const { email, fullname } = req.body;
+            const user = await teamService.getSingleMemberByFilter({ email, fullname });
 
             if (!user) {
                 throw { statusCode: 404, message: 'User not found' };

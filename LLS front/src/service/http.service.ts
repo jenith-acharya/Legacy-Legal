@@ -147,7 +147,7 @@ class HttpService {
       throw errorResponse;
     } else if (error.request) {
       console.error("No response received:", error.request);
-      throw new Error("Network error: No response received from the server");
+      throw new Error( "Network error: No response received from the server");
     } else {
       console.error("Error Setting Up Request:", error.message);
       throw new Error(`Error: ${error.message}`);
