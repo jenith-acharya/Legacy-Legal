@@ -30,6 +30,19 @@ class PracticeService {
         }
     };
 
+     getDetailById = async (id) => {
+            try {
+                const blogDetail = await BlogModel.findById(id).populate('createdBy', ['_id', 'title', 'description']);
+                if (blogDetail) {
+                    return blogDetail;
+                } else {
+                    throw { statusCode: 422, message: "Unable to process request" };
+                }
+            } catch (exception) {
+                throw exception;
+            }
+        };
+
     // Get details of a practice area by filter
     getDetailByFilter = async (filter) => {
         try {

@@ -75,17 +75,19 @@ class PracticeController {
   // View a single practice item
   viewPractice = async (req, res, next) => {
     try {
-      const practice = req.params.practiceName;
-      if (!practice) {
-        throw { statusCode: 400, message: "practiceName is required" };
+      const id = req.params.id;
+      if (!id) {
+        throw { statusCode: 400, message: "practiceID is required" };
       }
-      const practiceDetail = await practiceService.getDetailByFilter({ title: practice });
+      const practiceDetail = await practiceService.getDetailByFilter({ _id: id });
       if (!practiceDetail) {
         throw { statusCode: 404, message: "Practice item not found" };
       }
-
+  
+      practiceDetail.image = getCloudinaryUrl(practiceDetail.image);
+  
       res.status(200).json({
-        result: practiceDetail,
+        data: practiceDetail,
         message: "Practice item detail",
         meta: null,
       });
@@ -93,6 +95,7 @@ class PracticeController {
       next(exception);
     }
   };
+  
 
   // View practice item for Admin
   viewPracticeForAdmin = async (req, res, next) => {

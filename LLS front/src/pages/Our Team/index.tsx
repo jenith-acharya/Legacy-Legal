@@ -1,12 +1,12 @@
-import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faTwitter, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import {  Button } from "flowbite-react";
+import { Button } from "flowbite-react";
 import TeamSvc from "../../pages/Our Team/team.service";
 import { useEffect, useState } from "react";
+import LoadingComponent from "../../components/common/loading/loading.component";
 
-const TeamSection = () => {
+const OurTeamComponent = () => {
   const [members, setMembers] = useState<any | null>(null);
 
   const fetchTeamMembers = async () => {
@@ -32,7 +32,7 @@ const TeamSection = () => {
         <p className="text-center text-red-800 mt-2">
           Experienced professionals dedicated to your success.
         </p>
-        <NavLink to="/ourteam/">
+        
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             {/* Ensure members data exists and is an array before mapping */}
             {members && Array.isArray(members) ? (
@@ -41,11 +41,14 @@ const TeamSection = () => {
                   key={index}
                   className="bg-white text-red-800 shadow-lg rounded-lg p-6 transition transform hover:scale-105 hover:shadow-xl"
                 >
+                 <a href={`/ourteam/${member._id}`}>               
                   <img
+                    
                     src={member.image}
                     alt={member.fullname}
                     className="w-full h-72 object-cover rounded-md"
                   />
+                  </a>
                   <h2 className="text-xl font-semibold mt-4">{member.fullname}</h2>
                   <p className="text-gray-800">{member.title}</p>
                   <p className="text-sm text-gray-600 mt-2">{member.expertise}</p>
@@ -85,10 +88,9 @@ const TeamSection = () => {
                 </div>
               ))
             ) : (
-              <p>Loading team members...</p> // Optional loading message
+              <LoadingComponent/>
             )}
           </div>
-        </NavLink>
       </div>
 
       <div className="flex justify-center mt-6">
@@ -101,7 +103,7 @@ const TeamSection = () => {
         </Button>
       </div>
     </section>
-    </> );
+    </>);
 };
 
-export default TeamSection;
+export default OurTeamComponent;

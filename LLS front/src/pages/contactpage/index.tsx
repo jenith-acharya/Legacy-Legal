@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 
 const Contactform = () => {
 
-  const [result, setResult] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -11,7 +10,6 @@ const Contactform = () => {
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
-    setResult("Sending....");
 
     // Create a new FormData object to send the form data
     const formData = new FormData(event.target);
@@ -42,7 +40,6 @@ const Contactform = () => {
       const data = await response.json();
       console.log(data); // Log the API response for debugging
 
-      // If the submission is successful, show a success message
       if (data.success) {
         Swal.fire({
           title: "Success!",
@@ -50,7 +47,6 @@ const Contactform = () => {
           icon: "success",
         });
       } else {
-        // If there's an error, show an error message
         Swal.fire({
           title: "Error",
           text: "There was an issue sending your message. Please try again.",
@@ -71,7 +67,6 @@ const Contactform = () => {
   return (
     <>
       <br />
-      {/* Google Map Embed */}
       <div className="w-full h-34 mb-6">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.363592545476!2d85.33885467377107!3d27.67515512691364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19002dc0e4ff%3A0xd2ce8e53498f4917!2sLegacy%20Legal%20Services!5e0!3m2!1sen!2snp!4v1745997637819!5m2!1sen!2snp" width="1500" height="250"  allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
       </div>
@@ -147,7 +142,7 @@ const Contactform = () => {
             Send
           </button>
         </form>
-        <span>{result}</span>
+        
       </div>
     </>
   );

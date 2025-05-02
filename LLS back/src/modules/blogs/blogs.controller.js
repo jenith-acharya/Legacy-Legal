@@ -147,7 +147,6 @@ viewBlogForAdmin = async (req, res, next) => {
     // Fetch the blog detail by ID
     const blogDetail = await blogService.getDetailById({ _id: id });
 
-    // Check if blogDetail is an array or object and format the image URL
     if (Array.isArray(blogDetail)) {
       blogDetail.forEach(blog => {
         blog.image = getCloudinaryUrl(blog.image); // Use the URL function here

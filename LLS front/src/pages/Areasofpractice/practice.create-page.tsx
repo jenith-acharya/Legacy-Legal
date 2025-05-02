@@ -32,7 +32,7 @@ const PracticeCreatePage = () => {
   return (
     <>
       <div className="overflow-x-auto mt-5 mb-5 ml-2 mr-2">
-        <Heading1>Create Practice</Heading1>
+        <Heading1>Create Areas of Practice</Heading1>
         <br />
         <hr />
       </div>

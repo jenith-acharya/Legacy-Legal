@@ -33,7 +33,7 @@ const PracticeEditPage = () => {
   return (
     <>
       <div className="overflow-x-auto mt-5 mb-5 ml-2 mr-2">
-        <Heading1>Edit Practice</Heading1>
+        <Heading1>Edit Areas of Practice</Heading1>
         <br />
         <hr />
       </div>

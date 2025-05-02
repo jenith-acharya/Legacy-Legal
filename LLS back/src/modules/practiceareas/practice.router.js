@@ -25,7 +25,7 @@ router.route('/')
     );
 
 router.route('/:id')
-    .get(practiceController.viewPractice)
+    
     .patch(
         loginCheck,
         hasPermission(['admin']),

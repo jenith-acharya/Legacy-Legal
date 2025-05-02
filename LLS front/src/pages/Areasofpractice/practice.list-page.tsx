@@ -97,7 +97,7 @@ const PracticeListingPage = () => {
     <>
       <div className="overflow-x-auto mt-5 mb-5 ml-2 mr-2">
         <HeadingWithLink
-          title="Practice Management"
+          title="Areas of Practice Management"
           link="/admin/areasofpractice/create"
           btntxt="Add Practice"
         />
