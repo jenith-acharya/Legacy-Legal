@@ -9,7 +9,7 @@ const teammemberrouter = require('../modules/members/members.router');
 // Define routes
 router.use('/auth', authRouter);
 router.use('/blogs', blogsrouter);
-router.use('/practiceareas', practicerouter);
+router.use('/practice', practicerouter);
 router.use('/member', teammemberrouter);
 
 module.exports = router;

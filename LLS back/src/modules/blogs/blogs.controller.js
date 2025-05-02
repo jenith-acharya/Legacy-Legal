@@ -136,8 +136,7 @@ class BlogController {
     }
   };
 
-  // View a single blog post for Admin
-  // View a single blog post for Admin
+  
 viewBlogForAdmin = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -202,8 +201,7 @@ viewBlogForAdmin = async (req, res, next) => {
         deleteFile(`./public/uploads/blogs/${image.filename}`);
       }
 
-      console.log(data);
-      console.log(id);
+    
 
       const response = await blogService.updateBlogByID(id, data);
   

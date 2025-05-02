@@ -1,101 +1,163 @@
-const { uploadImage } = require("../../config/cloudinary.config");
+const { uploadImage, cloudinary } = require("../../config/cloudinary.config");
 const { deleteFile } = require("../../../utilis/helper");
 const practiceService = require("./practice.service");
 const slugify = require('slugify');
 
+const getCloudinaryUrl = (publicId) => {
+  return `https://res.cloudinary.com/${cloudinary.config().cloud_name}/image/upload/${publicId}`;
+};
+
 class PracticeController {
-  async listForHome(req, res, next) { 
-      try {
-        const list = await practiceService.listPractices();
-        res.json({ data: list , message: "List of practice areas for home" });
-      } catch (error) {
-          next(error);
-      }
-  }
 
-  async countPractices(req, res, next) {
-      try {
-          const count = await practiceService.countPractices();
-          res.json({ data: count, message: "Total practice areas", meta: null });
-      } catch (error) {
-          next(error);
-      }
-  }
-
-  async listForTable(req, res, next) {
-      try {
-          const practices = await practiceService.listPractices();
-          res.json({ data: practices, message: "Practice areas list", meta: null });
-      } catch (error) {
-          next(error);
-      }
-  }
-
-
-  async createPractice(req, res, next) {
+  // Create a new practice item
+  createPractice = async (req, res, next) => {
     try {
       const data = req.body;
-  
-      data.createdBy = req.authUser.id;
-  
+      const image = req.file;
+
+      if (image) {
+        const publicId = await uploadImage(`./public/uploads/practices/${image.filename}`);
+        data.image = publicId;
+        deleteFile(`./public/uploads/practices/${image.filename}`);
+      }
+
       if (!data.title) {
-        throw { statusCode: 422, message: 'Title is required to generate slug' };
+        throw { statusCode: 422, message: 'Practice title is required to generate slug' };
       }
+
       data.slug = slugify(data.title, { lower: true, strict: true });
-  
+      data.createdBy = req.authUser._id;
+
       const response = await practiceService.createPractice(data);
-  
-      res.status(201).json({
+
+      res.json({
         data: response,
-        message: "Practice created successfully",
-        meta: null
+        message: "Practice item created successfully",
+        meta: null,
       });
-    } catch (error) {
-      next(error);
+    } catch (exception) {
+      console.log(`Error in createPractice ${exception}`);
+      next(exception);
     }
-  }
+  };
 
-  async viewPractice(req, res, next) {
-      try {
-          const { practice } = req.params;
-          if (!practice) return res.status(400).json({ message: "Practice ID is required" });
+  // List all practice items
+  listPractices = async (req, res, next) => {
+    try {
+      const { page = 1, limit = 5, search } = req.query;
+      let filter = {};
 
-          const practiceDetail = await practiceService.getDetailByFilter({ _id: practice });
-          if (!practiceDetail) return res.status(404).json({ message: "Practice not found" });
-
-          res.status(200).json({ data: practiceDetail, message: "Practice details retrieved", meta: null });
-      } catch (error) {
-          next(error);
+      if (search) {
+        filter.title = { $regex: search, $options: "i" };
       }
-  }
 
-  async editPractice(req, res, next) {
-      try {
-          const { practice } = req.params;
-          if (!practice) return res.status(400).json({ message: "Practice ID is required" });
+      const { practices, totalPages, total, currentPage } = await practiceService.listPractices(page, limit, filter);
 
-          const data = req.body;
-          const updatedPractice = await practiceService.updateById(practice, data);
-          if (!updatedPractice) return res.status(404).json({ message: "Practice not found" });
+      practices.forEach(practice => {
+        practice.image = getCloudinaryUrl(practice.image);
+      });
 
-          res.json({ data: updatedPractice, message: "Practice updated successfully", meta: null });
-      } catch (error) {
-          next(error);
+      res.json({
+        data: practices,
+        message: "List of practice items",
+        meta: {
+          total,
+          currentPage,
+          totalPages,
+          limit
+        },
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  // View a single practice item
+  viewPractice = async (req, res, next) => {
+    try {
+      const practice = req.params.practiceName;
+      if (!practice) {
+        throw { statusCode: 400, message: "practiceName is required" };
       }
-  }
-
-  async deletePractice(req, res, next) {
-      try {
-          const { practice } = req.params;
-          const deleted = await practiceService.deleteById(practice);
-          if (!deleted) return res.status(404).json({ message: "Practice not found" });
-
-          res.status(204).send();
-      } catch (error) {
-          next(error);
+      const practiceDetail = await practiceService.getDetailByFilter({ title: practice });
+      if (!practiceDetail) {
+        throw { statusCode: 404, message: "Practice item not found" };
       }
-  }
+
+      res.status(200).json({
+        result: practiceDetail,
+        message: "Practice item detail",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  // View practice item for Admin
+  viewPracticeForAdmin = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        throw { statusCode: 400, message: "Practice ID is required" };
+      }
+
+      const practiceDetail = await practiceService.getDetailById({ _id: id });
+
+      if (Array.isArray(practiceDetail)) {
+        practiceDetail.forEach(practice => {
+          practice.image = getCloudinaryUrl(practice.image);
+        });
+      } else {
+        practiceDetail.image = getCloudinaryUrl(practiceDetail.image);
+      }
+
+      res.status(200).json({
+        data: practiceDetail,
+        message: "Practice item details for admin retrieved successfully",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  // Edit a practice item
+  editPractice = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      if (!id) {
+        throw { statusCode: 400, message: "Practice ID is required" };
+      }
+      const data = req.body;
+      const image = req.file;
+
+      if (image) {
+        const publicId = await uploadImage(`./public/uploads/practices/${image.filename}`);
+        data.image = publicId;
+        deleteFile(`./public/uploads/practices/${image.filename}`);
+      }
+
+      const response = await practiceService.updateById(id, data);
+
+      res.json({ data: response, message: "Practice item updated successfully", meta: null });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  // Delete a practice item
+  deletePractice = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await practiceService.deleteById(id);
+      res.json({ data: null, message: "Practice item deleted successfully", meta: null });
+    } catch (exception) {
+      next(exception);
+    }
+  };
 }
 
+// Export the controller instance
 const practiceController = new PracticeController();
 module.exports = practiceController;

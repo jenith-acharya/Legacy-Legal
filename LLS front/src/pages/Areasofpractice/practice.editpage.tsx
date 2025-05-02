@@ -1,13 +1,14 @@
 import Heading1 from "../../components/common/title";
 import { toast } from "react-toastify";
 import { useState } from "react";
-
+import { useParams } from "react-router-dom";
 import PracticeSvc from "./practice.service"; 
 import { useNavigate } from "react-router-dom";
 import PracticeFormComponent from "../../components/practice/practice.form.component";
 
 const PracticeEditPage = () => {
   const [loading, setLoading] = useState(false);
+  const params = useParams();
 
   const navigate = useNavigate();
 
@@ -18,9 +19,9 @@ const PracticeEditPage = () => {
         ...data,
         status: data.status.value 
       };
-      await PracticeSvc.postRequest("/practiceareas/", submitData, { auth: true, file: true });
+      await PracticeSvc.patchRequest("/practice/"+params.id, submitData, { auth: true, file: true });
       toast.success("Practice created successfully");
-      navigate("/admin/practiceareas/");
+      navigate("/admin/areasofpractice/");
     } catch (exception) {
       console.error(exception);
       toast.error("Error while creating practice");

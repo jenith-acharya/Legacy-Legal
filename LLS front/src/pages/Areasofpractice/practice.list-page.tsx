@@ -1,4 +1,4 @@
-import { Badge, Table, TextInput } from "flowbite-react";
+import {  Table, TextInput } from "flowbite-react";
 import { Pagination } from "flowbite-react";
 import { HeadingWithLink } from "../../components/common/title";
 import { useCallback, useEffect, useState } from "react";
@@ -115,9 +115,7 @@ const PracticeListingPage = () => {
         <Table>
           <Table.Head>
             <Table.HeadCell className="bg-red-800 text-white">Practice Name</Table.HeadCell>
-            <Table.HeadCell className="bg-red-800 text-white">Link</Table.HeadCell>
             <Table.HeadCell className="bg-red-800 text-white">Image</Table.HeadCell>
-            <Table.HeadCell className="bg-red-800 text-white">Status</Table.HeadCell>
             <Table.HeadCell className="bg-red-800 text-white">Action</Table.HeadCell>
           </Table.Head>
 
@@ -132,20 +130,14 @@ const PracticeListingPage = () => {
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {row.title}
                       </Table.Cell>
-                      <Table.Cell>
-                        <a href={row.link} target="_blank" className="text-blue-700"> Go To Link</a>
-                      </Table.Cell>
+                     
                       <Table.Cell>
                         <img src={row.image} className="w-24" />
                       </Table.Cell>
-                      <Table.Cell>
-                        <Badge color={row.status === "active" ? "green" : "red"}>
-                          {row.status === "active" ? "Publish" : "Unpublish"}
-                        </Badge>
-                      </Table.Cell>
+                      
                       <Table.Cell className="flex gap-3">
                         <ActionButtons
-                          editUrl={`admin/practice/${row._id}/edit`}
+                          editUrl={`/admin/areasofpractice/edit/${row._id}`}
                           deleteAction={deleteData}
                           rowId={row._id}
                         />

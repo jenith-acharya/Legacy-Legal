@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const PracticeSchema = new mongoose.Schema({
@@ -9,14 +10,14 @@ const PracticeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        required: true
+    },
     slug:{
         type: String,
         required:true,
         unique: true
-    },
-    status:{
-        type: String,
-        required:true
     },
     description:{
         type: String,
@@ -29,7 +30,7 @@ const PracticeSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
+        
     }
 });
 

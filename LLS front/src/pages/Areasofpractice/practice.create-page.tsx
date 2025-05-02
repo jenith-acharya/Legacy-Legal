@@ -18,9 +18,9 @@ const PracticeCreatePage = () => {
         ...data,
         status: data.status.value 
       };
-      await PracticeSvc.postRequest("/practiceareas/", submitData, { auth: true, file: true });
+      await PracticeSvc.postRequest("/practice/", submitData, { auth: true, file: true });
       toast.success("Practice created successfully");
-      navigate("/admin/practiceareas/");
+      navigate("/admin/areasofpractice/");
     } catch (exception) {
       console.error(exception);
       toast.error("Error while creating practice");

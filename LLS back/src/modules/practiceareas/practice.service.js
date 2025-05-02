@@ -19,6 +19,7 @@ class PracticeService {
             const total = await PracticeModel.countDocuments(filter);
             const totalPages = Math.ceil(total / limit);
             const practices = await PracticeModel.find(filter)
+                .populate(["_id", "title", "image", "description"])
                 .skip(skip)
                 .limit(limit)
                 .sort({ _id: 'desc' });

@@ -2,26 +2,25 @@ const express = require('express');
 const { loginCheck } = require('../../middlewares/auth.middleware');
 const { hasPermission } = require('../../middlewares/rbac.middleware');
 const { setPath, uploadFile } = require('../../middlewares/uploader.middleware');
-const { bodyValidator } = require('../../middlewares/validator.middlware'); // ✅ Fixed Typo
-const { practiceCreateDTO, practiceUpdateDTO } = require('./practice.request');
-const practiceController = require('./practice.controller'); // ✅ Ensure this is correctly imported
+const { bodyValidator } = require('../../middlewares/validator.middlware'); 
+const { PracticeAreaCreateDTO, PracticeAreaUpdateDTO } = require('./practice.request');
+const practiceController = require('./practice.controller'); 
 
 const router = express.Router();
 
 // Public routes
-router.get('/list-home', practiceController.listForHome);  // ✅ Ensure function exists
-router.get('/count', practiceController.countPractices);  
-router.get('/:id',practiceController.viewPractice ) // ✅ Ensure function exists
+router.get('/list-home', practiceController.listPractices);  
+router.get('/:id',practiceController.viewPractice )
 
 // Protected routes for Admin
 router.route('/')
-    .get(loginCheck, hasPermission(['admin']), practiceController.listForTable)
+    .get(loginCheck, hasPermission(['admin']), practiceController.listPractices)
     .post(
         loginCheck,
         hasPermission(['admin']),
         setPath('practices'),
         uploadFile().single('image'),
-        bodyValidator(practiceCreateDTO),
+        bodyValidator(PracticeAreaCreateDTO),
         practiceController.createPractice
     );
 
@@ -32,7 +31,7 @@ router.route('/:id')
         hasPermission(['admin']),
         setPath('practices'),
         uploadFile().single('image'),
-        bodyValidator(practiceUpdateDTO),
+        bodyValidator(PracticeAreaUpdateDTO),
         practiceController.editPractice
     )
     .delete(
