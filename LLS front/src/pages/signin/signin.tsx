@@ -27,8 +27,8 @@ export const Signin = () => {
 
   useEffect(() => {
     if (loggedInUser) {
-      toast.info("You are already logged in");
-      navigate('/' + loggedInUser.role);
+      toast.info("You are already logged in as " + loggedInUser.fullName );
+      navigate('/' + loggedInUser.role)  ;
     }
   }, []);
 
@@ -41,13 +41,13 @@ export const Signin = () => {
     //   console.log("Login Response:", response); 
       localStorage.setItem("_at", response.data.token);
       localStorage.setItem("_rt", response.data.refreshToken);
-      toast.success(`Welcome to ${response.data.userDetail.role}`);
+      toast.success(`Welcome to ${response.data.userDetail.role} ${response.data.userDetail.name}`);
       setLoggedInUser(response.data.userDetail);
       console.log(response.data)
       navigate("/" + response.data.userDetail.role);
     } catch (exception: any) {
         const errorMessage =
-          exception.response?.data?.message || "Login failed. Please try correct credentials.";
+          exception.response?.data?.message || "There is no user with this credentials";
         toast.error(errorMessage);
       }finally {
       setLoading(false);

@@ -25,9 +25,8 @@ export const Homeheader = () => {
   }, []);
 
   return (
-    <Navbar fluid className="bg-black h-20 sm:h-32">
-      {/* Logo */}
-      <Navbar.Brand href="https://legacylegal.com.np">
+        <Navbar fluid className="bg-black h-20 sm:h-32 relative z-50">
+<Navbar.Brand href="https://legacylegal.com.np">
         <img src={Logo} className="h-16 w-32 sm:h-28 sm:w-64" alt="LLS Logo" />
       </Navbar.Brand>
 
@@ -68,9 +67,8 @@ export const Homeheader = () => {
         <Navbar.Toggle className="text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50" />
       </div>
 
-      {/* Navigation Links */}
-      <Navbar.Collapse className="decoration-white bg-black text-center">
-        <NavLink
+      <Navbar.Collapse className="decoration-white bg-black text-center z-50">
+      <NavLink
           to="/"
           className={({ isActive }) =>
             `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`

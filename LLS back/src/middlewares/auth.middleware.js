@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const userService = require('../modules/members/members.services');
+const teamService = require('../modules/members/members.services');
 
 const loginCheck = async (req, res, next) => {
     try {
@@ -20,7 +20,7 @@ const loginCheck = async (req, res, next) => {
         const data = jwt.verify(token, process.env.JWT_SECRET);  
 
         // TODO: Fetch user from database
-        let user = await userService.getSingleMemberById({ _id: data.sub });
+        let user = await teamService.getSingleMemberById({ _id: data.sub });
 
         //  Check if user exists
         if (!user) {
@@ -31,7 +31,6 @@ const loginCheck = async (req, res, next) => {
             };
         }
 
-        // this is optional : Check if user is active
         if (user.status !== 'active') { 
             throw {
                 statusCode: 403,
@@ -46,7 +45,7 @@ const loginCheck = async (req, res, next) => {
             email: user.email,
             role: user.role,
             status: user.status,
-            fullName: user?.fullName || null,
+            fullName: user?.fullname || null,
             profile: user?.image || null,
             phone: user?.phone || null,
         };

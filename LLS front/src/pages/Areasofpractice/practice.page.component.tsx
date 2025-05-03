@@ -11,7 +11,7 @@ export const AreasOfPracticeComponentforpage = () => {
     try {
       const response: any = await PracticeSvc.getRequest("/practice/list-home");
 
-      setPractice(response.data || []);
+      setPractice(response.data );
     } catch (exception) {
       console.error("Error fetching practice areas:", exception);
       setPractice([]);
@@ -33,8 +33,8 @@ export const AreasOfPracticeComponentforpage = () => {
           Areas Of Practice
           </h1>
       <div className="text-center lg:mb-16 mb-8">
-        <p className="font-light text-red-800 sm:text-xl dark:text-gray-400">
-          We offer expertise across a wide range of legal practice areas to help
+      <p className="text-center text-red-800 mt-2">
+             We offer expertise across a wide range of legal practice areas to help
           you navigate complex legal challenges confidently.
         </p>
       </div>
@@ -52,7 +52,7 @@ export const AreasOfPracticeComponentforpage = () => {
               >
                 <a href={`/areaofpractice/${area._id}`}> 
                   <img
-                    className="w-full h-56 object-cover"
+                    className="w-full h-40 object-cover"
                     src={area.image}
                     alt={area.title}
                   />

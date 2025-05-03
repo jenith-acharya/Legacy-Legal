@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react";
-import Heading1 from "../common/title";
 import LoadingComponent from "../common/loading/loading.component";
 import PracticeSvc from "../../pages/Areasofpractice/practice.service";
 
@@ -12,7 +11,6 @@ export const AreasOfPracticeComponent = () => {
     try {
       const response: any = await PracticeSvc.getRequest("/practice/list-home");
       setPractice(response.data);
-      console.log("Practice areas fetched:", response.data);
     } catch (exception) {
       console.error("Error fetching practice areas:", exception);
       setPractice([]);
@@ -28,7 +26,7 @@ export const AreasOfPracticeComponent = () => {
   const filteredPractice = practice
     ? practice.filter(
         (area) =>
-          !area.status || area.status === "active" || area.status === "Publish"
+           area.status === "active" || area.status === "Publish"
       )
     : [];
 
@@ -38,9 +36,11 @@ export const AreasOfPracticeComponent = () => {
   return (
     <section className="bg-white dark:bg-gray-900 py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
       <div className="text-center lg:mb-16 mb-8">
-        <Heading1>Areas Of Practice</Heading1>
-        <p className="font-light text-red-800 sm:text-xl dark:text-gray-400">
-          We offer expertise across a wide range of legal practice areas to help
+      <h1 className="text-4xl font-bold text-center text-red-800 mb-8">
+          Areas Of Practice
+          </h1>
+        <p className="text-center text-red-800 mt-2">
+            We offer expertise across a wide range of legal practice areas to help
           you navigate complex legal challenges confidently.
         </p>
       </div>
@@ -56,7 +56,7 @@ export const AreasOfPracticeComponent = () => {
             >
               <a href={`/areaofpractice/${area._id}`}>
                 <img
-                  className="w-full h-56 object-cover"
+                  className="w-full h-40 object-cover"
                   src={area.image}
                   alt={area.title}
                 />
