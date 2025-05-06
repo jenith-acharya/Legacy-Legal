@@ -36,7 +36,6 @@ const Blogslistingpage = () => {
     try {
       
       const response: any = await BlogsSvc.getRequest("/blogs", {auth:true , params:{limit:limit, page: page, search: search}})
-      console.log(response)
       
       setBlogs(response.data)
       

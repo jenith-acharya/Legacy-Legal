@@ -25,16 +25,14 @@ export const Homeheader = () => {
   }, []);
 
   return (
-        <Navbar fluid className="bg-black h-20 sm:h-32 relative z-50">
-<Navbar.Brand href="https://legacylegal.com.np">
+    <Navbar fluid className="bg-black h-20 sm:h-32 relative z-50">
+      <Navbar.Brand href="https://legacylegal.com.np">
         <img src={Logo} className="h-16 w-32 sm:h-28 sm:w-64" alt="LLS Logo" />
       </Navbar.Brand>
 
-      {/* Right Side */}
       <div className="flex items-center gap-4 md:order-2">
         {loggedInUser ? (
           <>
-            {/* User Profile */}
             <NavLink
               to={`/${loggedInUser.role}`}
               className={({ isActive }) =>
@@ -50,25 +48,34 @@ export const Homeheader = () => {
               )}
               {loggedInUser.fullname}
             </NavLink>
+
+            {loggedInUser.role === "admin" && (
+              <Button
+                onClick={() => navigate("/admin")}
+                color="failure"
+                className="w-[150px] h-[45px] bg-red-800"
+                pill
+              >
+                Admin Panel
+              </Button>
+            )}
           </>
         ) : (
-          <>
-            {/* Sign In Button */}
-            <Button
-              onClick={() => navigate("/signin")}
-              color="failure"
-              className="w-[150px] h-[45px] bg-red-800"
-              pill
-            >
-              Sign In
-            </Button>
-          </>
+          <Button
+            onClick={() => navigate("/signin")}
+            color="failure"
+            className="w-[150px] h-[45px] bg-red-800"
+            pill
+          >
+            Sign In
+          </Button>
         )}
+
         <Navbar.Toggle className="text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50" />
       </div>
 
       <Navbar.Collapse className="decoration-white bg-black text-center z-50">
-      <NavLink
+        <NavLink
           to="/"
           className={({ isActive }) =>
             `block text-[15px] p-2 ${isActive ? "text-red-800" : "text-white"}`

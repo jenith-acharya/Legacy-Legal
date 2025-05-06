@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
-import CMSSidebar from "../components/cmssidebar/cms.sidebar.component";
 import AdminHeader from "../components/common/header/header-admin.component";
-
+import CMSSidebar from "../components/cmssidebar/cms.sidebar.component";
 const AdminLayout = () => {
   return (
     <>
