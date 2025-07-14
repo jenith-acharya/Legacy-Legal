@@ -1,1 +1,13 @@
-FROM node:18-alpine                                                                                                                                                                                                                                                       WORKDIR app/backend                                                                                                                                                                                                                                                       COPY backend/package.json backend/package-lock.json ./                                                                                                                                                                                                                    RUN npm install                                                                                                                                                                                                                                                           COPY backend/ .                                                                                                                                                                                                                                                           EXPOSE 9000                                                                                                                                                                                                                                                               CMD ["npm", "start"]
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+                                                                                                                                     RUN npm install 
+
+COPY . .
+
+EXPOSE 9000   
+
+
+CMD ["npm", "start"]
