@@ -1,0 +1,35 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Frontend Service
+  frontend:
+    build:
+      context: "./LLS front"
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+
+
+
+    depends_on:
+      - backend 
+    networks:
+      - app-network
+
+  # Backend Service
+  backend:
+    build:
+      context: "./LLS back" 
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000" 
+   
+    env_file:
+      - "./LLS back/.env"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
