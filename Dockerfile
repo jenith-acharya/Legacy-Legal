@@ -1,42 +1,33 @@
 
 # STAGE 1: Frontend Build
 
-FROM node:20-alpine as frontend-build
+FROM node:18-alpine AS frontend-builder
 
-WORKDIR /app/client
+WORKDIR /app/LLS front
 
-COPY client/package*.json ./
+COPY LLS front/package*.json ./
+
 RUN npm install
 
-COPY client/ ./
+COPY LLS front/ ./
+
 RUN npm run build
 
 
 
 # STAGE 2: Backend Install
 
-FROM node:18-alpine as backend-build
+FROM node:18-alpine AS backend-runner
 
-WORKDIR /app/backend
+WORKDIR /app/LLS back
 
-COPY backend/package*.json ./
-RUN npm install --production
+COPY LLS back/package*.json ./
 
-COPY backend/ ./
+RUN npm install 
 
+COPY LLS back/ .
 
-
-#STAGE 3: Production Image
-
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy backend
-COPY --from=backend-build /app/backend /app
-
-
-COPY --from=frontend-build /app/client/build /app/client-build
+COPY --from=frontend-builder /app/frontend/build /app/backend/public
 
 
 
