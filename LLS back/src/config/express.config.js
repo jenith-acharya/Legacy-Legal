@@ -14,7 +14,7 @@ const router = require('./router.config');
 // Use middlewares properly
 app.use(morgan('dev'));
 app.use(cors());
-app.use(express.static('public')); 
+app.use(express.static('dist')); 
 
 app.use(router);
 
