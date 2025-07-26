@@ -82,26 +82,27 @@ Clone the repository
 
 bash
 
-git clone https://github.com/your-username/legacylegal.com.git
-cd legacylegal.com
-Backend Setup
+git clone https://github.com/jenith-acharya/Legacy-Legal.git <br/>
+cd legacylegal.com<br/>
+Backend Setup<br/>
+
 
 bash
-
-cd backend
-npm install
-npm start
-Frontend Setup
-
+<br/>
+cd backend<br/>
+npm install<br/>
+npm start<br/>
+Frontend Setup<br/>
+<br/>
 bash
-
-cd frontend
-npm install
-npm start
+<br/>
+cd frontend <br/>
+npm install <br/>
+npm start   <br/>
 
 Environment Variables
-
-MONGO_URI=your_mongo_connection_string
-JWT_SECRET=your_jwt_secret
+<br/>
+<br/>MONGO_URI=your_mongo_connection_string
+<br/>JWT_SECRET=your_jwt_secret
 
 <hr/>
